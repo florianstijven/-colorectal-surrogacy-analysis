@@ -11,7 +11,7 @@ pointsize = 10
 res = 500
 
 # Load results of the sensitivity analysis
-load(file = "Code - Combining Conditions/sensitivity_analysis_results_100k.RData")
+load(file = "Code - Combining Conditions/sensitivity_analysis_results_50k.RData")
 
 # Imposing one restriction at a time is often an insufficient representation of
 # the available subject-matter knowledge. Therefore, it can be of interest to
@@ -19,7 +19,7 @@ load(file = "Code - Combining Conditions/sensitivity_analysis_results_100k.RData
 
 # As an illustration, we look at 4 possible combinations of the following
 # assumptions:
-# * weaker cross-associations and stochastic monotonicity 
+# * weaker cross-associations and stochastic monotonicity
 # * odds ratio of diseased in (0, 4) or larger than 3
 # * within associations in (0.5, 0.975) or (0.5, 0.85)(in terms of Spearman's rho)
 
@@ -55,7 +55,7 @@ sens_results_helper = sens_results_no_cond_ind %>%
 
 sens_results_helper = sens_results_helper %>%
   bind_rows(
-    sens_results_no_cond_ind %>% 
+    sens_results_no_cond_ind %>%
       filter(pmin(abs(sp_s0t0), abs(sp_s1t1)) > pmax(abs(sp_s0t1), abs(sp_s1t0))) %>%
       filter(
         sp_s0s1 > 0,
@@ -84,7 +84,7 @@ sens_results_helper = sens_results_helper %>%
 
 sens_results_helper = sens_results_helper %>%
   bind_rows(
-    sens_results_no_cond_ind %>% 
+    sens_results_no_cond_ind %>%
       filter(pmin(abs(sp_s0t0), abs(sp_s1t1)) > pmax(abs(sp_s0t1), abs(sp_s1t0))) %>%
       filter(
         sp_s0s1 > 0,
@@ -113,7 +113,7 @@ sens_results_helper = sens_results_helper %>%
 
 sens_results_helper = sens_results_helper %>%
   bind_rows(
-    sens_results_no_cond_ind %>% 
+    sens_results_no_cond_ind %>%
       filter(pmin(abs(sp_s0t0), abs(sp_s1t1)) > pmax(abs(sp_s0t1), abs(sp_s1t0))) %>%
       filter(
         sp_s0s1 > 0,
@@ -152,7 +152,7 @@ png(
   res = res
 )
 sens_results_helper %>%
-  ggplot(aes(x = sp_rho)) + 
+  ggplot(aes(x = sp_rho)) +
   coord_cartesian(xlim = c(0, 1)) +
   scale_x_continuous(name = TeX("$\\rho_s$")) +
   geom_histogram(
@@ -162,7 +162,7 @@ sens_results_helper %>%
     boundary = 1
   ) +
   theme_bw() +
-  facet_grid(rows = vars(within_associations), 
+  facet_grid(rows = vars(within_associations),
              cols = vars(odds_ratio)
              )
 dev.off()

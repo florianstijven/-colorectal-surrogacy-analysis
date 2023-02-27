@@ -34,7 +34,7 @@ best_fitted_model = fit_model_SurvSurv(data = data,
 # interactive; whereas processing the results is not computer intensive, but
 # interactive.
 
-# Sensitivity analysis without equality assumptions with 100k replications, but
+# Sensitivity analysis without equality assumptions with 50k replications, but
 # R^2_H is not computed to save some computer time. The essence of the results
 # are transportable between the ICA as Spearman's rho and R^2_H.
 sens_results_no_cond_ind = ica_SurvSurv_sens(
@@ -50,7 +50,7 @@ sens_results_no_cond_ind = ica_SurvSurv_sens(
 )
 
 
-# The results of the sensitivity analysis are saved to a file. These results are 
+# The results of the sensitivity analysis are saved to a file. These results are
 # analyzed in a separate file.
 save(sens_results_no_cond_ind,
      file = "Code - Combining Conditions/sensitivity_analysis_results_100k.RData")
