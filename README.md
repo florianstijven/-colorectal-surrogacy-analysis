@@ -14,17 +14,18 @@ in the causal-inference framework.
 # R-code
 
 To reproduce the results reported in Stijven et al. (2023), first run
-the `colorectal_model_fit.R`. The code in this file fits a set of vine
+`colorectal_model_fit.R`. The code in this file fits a set of vine
 copula models, selects the best fitting model based in the Akaike
 information criterion, and conducts the Monte Carlo sensitivity analysis
 for the individual causal association. The results of this sensitivity
 analysis are then saved to `sensitivity_analysis_results.RData`. These
 results are further analyzed (plots, tables, etc.) in
-`colorectal_processing.R`. Plots are saved in the `Figures` directory.
+`colorectal_processing.R`. Plots are saved to the `Figures` directory.
 
 The `Code - Combining Conditions` directory contains R-code for a
 supplementary analysis where a more fine-grained use of unverifiable
-assumptions is illustrated.
+assumptions is illustrated. This supplemnentary analysis is described in
+detail in Stijven et al. (2023, Supplementary Materials).
 
 # Data
 
@@ -37,7 +38,7 @@ treatment with 5FU alone were compared (Greco and others, 1996).
 
 # References
 
-Stijven, F., Alonso, a., Molenberghs, G., Van Der Elst, W., Van
+Stijven, F., Alonso, A., Molenberghs, G., Van Der Elst, W., Van
 Keilegom, I. (2023). An information-theoretic approach to the evaluation
 of time-to-event surrogates for time-to-event true endpoints based on
 causal inference.
