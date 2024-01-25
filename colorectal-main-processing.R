@@ -11,8 +11,8 @@ double_height = 12.8
 res = 600
 
 # Load results of the sensitivity analysis
-sens_results = readr::read_csv(file = "sensitivity-analysis-results-main.csv")
-
+sens_results = read_rds("sensitivity-analysis-results-main.rds")
+best_fitted_model = read_rds("best-fitted-model.rds")
 # Path to save results
 path = "Figures/main/"
 
@@ -59,9 +59,14 @@ ggsave(filename = paste0(path, "colo_results_sprho.png"),
        units = "cm",
        dpi = res)
 
-# Compute Estimated interval of ignorance.
-range(sens_results$ICA)
-range(sens_results$sp_rho)
+# Compute Estimated intervals of ignorance and uncertainty.
+a = Sys.time()
+Surrogate:::sensitivity_intervals_Dvine(
+  fitted_model = best_fitted_model,
+  sens_results = sens_results,
+  B = 200
+)
+Sys.time() - a
 
 # Proportions of dependent censoring of TTP by OS in both treatment groups.
 mean(sens_results$prop_always + sens_results$prop_harmed)

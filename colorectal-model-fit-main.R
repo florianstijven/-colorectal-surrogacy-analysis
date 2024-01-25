@@ -186,9 +186,8 @@ dev.off()
 a = Sys.time()
 sens_results = sensitivity_analysis_SurvSurv_copula(
   fitted_model = best_fitted_model,
-  n_sim = 5000,
+  n_sim = 200,
   n_prec = 5000,
-  minfo_prec = 5000,
   ncores = 10,
   marg_association = TRUE,
   cond_ind = FALSE,
@@ -207,5 +206,7 @@ readr::write_csv(
   x = sens_results_no_cond_ind,
   file = "sensitivity-analysis-results-main.csv"
 )
+saveRDS(sens_results, file = "sensitivity-analysis-results-main.rds")
+saveRDS(best_fitted_model, file = "best-fitted-model.rds")
 
 
