@@ -119,8 +119,8 @@ sens_results %>%
          "S_1 and T_0" = "sp_rho_t0s1",
          "T_0 and T_1" = "sp_rho_t0t1") %>%
   ggpairs(columns = 4:7) +
-  scale_x_continuous(name = TeX("$\\rho_s$"), limits = c(0, 1)) +
-  scale_y_continuous(name = TeX("$\\rho_s$"), limits = c(0, 1)) +
+  scale_x_continuous(name = TeX("$\\rho_s$")) +
+  scale_y_continuous(name = TeX("$\\rho_s$")) +
   theme_bw()
 ggsave(filename = paste0(path, "ggpairs_sp_rho.png"),
        device = "png",
