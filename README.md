@@ -11,6 +11,12 @@ advanced colorectal cancer data. The aim of this analysis is to
 illustrate the evaluation of a (composite) time-to-event surrogate for a
 time-to-event true endpoint in the causal-inference framework.
 
+The surrogacy evaluation methods are implemented in the Surrogate R-package 
+on CRAN. However, the most recent version of the package can be installed
+from GitHub https://github.com/florianstijven/Surrogate-development. It is
+advised to install directly from GitHub for the most recent version of the 
+package.
+
 # R-code
 
 To reproduce the results reported in Stijven et al. (2023), first run
