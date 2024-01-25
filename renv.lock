@@ -255,7 +255,7 @@
       "RemoteRepo": "Surrogate-development",
       "RemoteUsername": "florianstijven",
       "RemoteRef": "HEAD",
-      "RemoteSha": "66db975d225c0158329f8e07e41da25ab47206b5",
+      "RemoteSha": "c943b4ba56585861e7ec536b159e2b1bc2ed95d5",
       "Requirements": [
         "MASS",
         "R",
@@ -275,7 +275,7 @@
         "rvinecopulib",
         "survival"
       ],
-      "Hash": "ec182b1bda06c37dc49a6274a9c0bdec"
+      "Hash": "6370098407a4b5c2bd67819143b09063"
     },
     "TH.data": {
       "Package": "TH.data",

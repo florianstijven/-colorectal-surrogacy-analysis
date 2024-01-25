@@ -1,7 +1,15 @@
+# Setup -------------------------------------------------------------------
+
 # Load the required packages
 library(Surrogate)
 library(tidyverse)
-
+# Size parameter for saving plots to disk.
+single_width = 9 / 2.54
+double_width = 14 / 2.54
+single_height = 8.2 / 2.54
+double_height = 12.8 / 2.54
+res = 600
+save_to = "Figures/Model Fit/"
 
 # Put the data in correct format: (x_i, y_i, z_i, \delta_i^X, \delta_i^Y). This
 # is also explained in the help files of Surrogate::fit_model_SurvSurv.
@@ -27,6 +35,9 @@ data %>%
   summarize(prop_dependent_censoring =
               mean((PROGRESS_IND == 0) & (SURV_IND == 1) &
                      (PROGRESSTIME == SURVTIME)))
+
+
+# Model Fitting -----------------------------------------------------------
 
 # After ensuring that the data are in the correct format, the survival-survival
 # model is fitted. Models are fitted for different combinations of the number of
@@ -84,15 +95,86 @@ best_fitted_model = fitted_models$fitted_model[[1]]
 # Print summary of the selected model.
 best_fitted_model
 
-# The marginal goodness of fit is assessed by comparing the model-based with the
-# KM-estimate of the survival curve of OS and PFS (not TTP!) in both treatment
-# groups. This is implemented in the marginal_gof_scr() function.
-grid = seq(0.01, 200, 0.1)
-marginal_gof_scr(fitted_model = best_fitted_model,
-                 data = data, grid = grid, time_unit = "weeks")
+
+# Goodness of Fit ---------------------------------------------------------
+
+# Evaluate goodness of fit of the selected model.
+grid = seq(from = 1, to = 250, length.out = 400)
+plot(best_fitted_model, grid = grid)
+# The plot() method automatically runs all GoF plots. In order to save them
+# one-by-one. We call the functions that produce only single plots one-by-one.
+pdf(file = paste0(save_to, "marginal-gof-s0.pdf"), width = double_width, height = double_height)
+marginal_gof_scr_S_plot(fitted_model = best_fitted_model,
+                        grid = grid,
+                        treated = 0,
+                        main = "Survival Function S - Control Treatment",
+                        xlab = "t (months)",
+                        ylab = "P(S > t)")
+dev.off()
+pdf(file = paste0(save_to, "marginal-gof-s1.pdf"), width = double_width, height = double_height)
+marginal_gof_scr_S_plot(fitted_model = best_fitted_model,
+                        grid = grid,
+                        treated = 1,
+                        main = "Survival Function S - Active Treatment",
+                        xlab = "t (months)",
+                        ylab = "P(S > t)")
+dev.off()
+pdf(file = paste0(save_to, "marginal-gof-t0.pdf"), width = double_width, height = double_height)
+marginal_gof_scr_T_plot(fitted_model = best_fitted_model,
+                        grid = grid,
+                        treated = 0,
+                        main = "Survival Function T - Control Treatment",
+                        xlab = "t (months)",
+                        ylab = "P(T > t)")
+dev.off()
+pdf(file = paste0(save_to, "marginal-gof-t1.pdf"), width = double_width, height = double_height)
+marginal_gof_scr_T_plot(fitted_model = best_fitted_model,
+                        grid = grid,
+                        treated = 1,
+                        main = "Survival Function T - Active Treatment",
+                        xlab = "t (months)",
+                        ylab = "P(T > t)")
+dev.off()
+
+pdf(file = paste0(save_to, "mean-S-before-T-gof0.pdf"), width = double_width, height = double_height)
+mean_S_before_T_plot_scr(fitted_model = best_fitted_model,
+                         grid = grid,
+                         treated = 0,
+                         xlab = "t (months)",
+                         ylab = "E(S | T = t, S < T)",
+                         col = "gray",
+                         main = "Control Treatment")
+dev.off()
+pdf(file = paste0(save_to, "mean-S-before-T-gof1.pdf"), width = double_width, height = double_height)
+mean_S_before_T_plot_scr(fitted_model = best_fitted_model,
+                         grid = grid,
+                         treated = 1,
+                         xlab = "t (months)",
+                         ylab = "E(S | T = t, S < T)",
+                         col = "gray",
+                         main = "Active Treatment")
+dev.off()
+pdf(file = paste0(save_to, "prob-dying-gof0.pdf"), width = double_width, height = double_height)
+prob_dying_without_progression_plot(fitted_model = best_fitted_model,
+                                    grid = grid,
+                                    treated = 0,
+                                    xlab = "t (months)",
+                                    ylab = "P(S = T | T = t)",
+                                    col = "gray",
+                                    main = "Control Treatment")
+dev.off()
+pdf(file = paste0(save_to, "prob-dying-gof1.pdf"), width = double_width, height = double_height)
+prob_dying_without_progression_plot(fitted_model = best_fitted_model,
+                                    grid = grid,
+                                    treated = 1,
+                                    xlab = "t (months)",
+                                    ylab = "P(S = T | T = t)",
+                                    col = "gray",
+                                    main = "Active Treatment")
+dev.off()
 
 
-# SENSITIVITY ANALYSIS
+# Sensitivity Analysis ----------------------------------------------------
 
 # The sensitivity analysis is implemented in this file, but the results of the
 # sensitivity analysis are saved into an .csv file and processed elsewhere.
@@ -115,6 +197,9 @@ sens_results = sensitivity_analysis_SurvSurv_copula(
   upper = c(0.95, 0, 0, 0.8)
 )
 print(Sys.time() - a)
+
+
+# Save Results ------------------------------------------------------------
 
 # The results of the sensitivity analysis are saved to a file. These results are
 # analyzed in a separate file.
