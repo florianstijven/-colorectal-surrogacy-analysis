@@ -183,16 +183,19 @@ dev.off()
 # interactive.
 
 # Run the sensitivity analysis with the main assumptions.
+set.seed(1)
 a = Sys.time()
 sens_results = sensitivity_analysis_SurvSurv_copula(
   fitted_model = best_fitted_model,
-  n_sim = 200,
-  n_prec = 5000,
-  ncores = 10,
+  n_sim = 5e3,
+  n_prec = 1e4,
+  ncores = 1,
   marg_association = TRUE,
-  cond_ind = FALSE,
+  cond_ind = TRUE,
   composite = TRUE,
-  lower = c(0, 0, 0, 0),
+  degrees = 0,
+  copula_family2 = "gaussian",
+  lower = c(0.5, 0, 0, 0.15),
   upper = c(0.95, 0, 0, 0.8)
 )
 print(Sys.time() - a)
@@ -203,7 +206,7 @@ print(Sys.time() - a)
 # The results of the sensitivity analysis are saved to a file. These results are
 # analyzed in a separate file.
 readr::write_csv(
-  x = sens_results_no_cond_ind,
+  x = sens_results,
   file = "sensitivity-analysis-results-main.csv"
 )
 saveRDS(sens_results, file = "sensitivity-analysis-results-main.rds")

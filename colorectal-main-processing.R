@@ -3,6 +3,7 @@ set.seed(1)
 library(tidyverse)
 library(latex2exp)
 library(GGally)
+library(Surrogate)
 #specify options for saving the plots to files
 single_width = 9
 double_width = 14
@@ -61,7 +62,7 @@ ggsave(filename = paste0(path, "colo_results_sprho.png"),
 
 # Compute Estimated intervals of ignorance and uncertainty.
 a = Sys.time()
-Surrogate:::sensitivity_intervals_Dvine(
+sensitivity_intervals = sensitivity_intervals_Dvine(
   fitted_model = best_fitted_model,
   sens_results = sens_results,
   B = 200
