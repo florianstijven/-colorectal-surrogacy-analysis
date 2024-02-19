@@ -10,6 +10,7 @@ ncores = as.integer(args[1])
 library(Surrogate)
 library(dplyr)
 library(tidyr)
+library(copula)
 
 # We need the best fitted vine copula model.
 best_fitted_model = readRDS("best-fitted-model.rds")

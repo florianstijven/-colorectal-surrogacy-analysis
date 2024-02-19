@@ -9,6 +9,13 @@
     ]
   },
   "Packages": {
+    "ADGofTest": {
+      "Package": "ADGofTest",
+      "Version": "0.3",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "aab9c2810d1ec384e73f2d8dba6952bb"
+    },
     "BH": {
       "Package": "BH",
       "Version": "1.84.0-0",
@@ -683,6 +690,30 @@
       ],
       "Hash": "bb097fccb22d156624fd07cd2894ddb6"
     },
+    "copula": {
+      "Package": "copula",
+      "Version": "1.1-2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "ADGofTest",
+        "Matrix",
+        "R",
+        "colorspace",
+        "graphics",
+        "gsl",
+        "lattice",
+        "methods",
+        "mvtnorm",
+        "numDeriv",
+        "pcaPP",
+        "pspline",
+        "stabledist",
+        "stats",
+        "stats4"
+      ],
+      "Hash": "2c3f6cf83149cc0a7762f01a83fbd191"
+    },
     "cpp11": {
       "Package": "cpp11",
       "Version": "0.4.7",
@@ -1203,6 +1234,16 @@
         "utils"
       ],
       "Hash": "7d7f283939f563670a697165b2cf5560"
+    },
+    "gsl": {
+      "Package": "gsl",
+      "Version": "2.1-8",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "8f8205cbb9f1066a94e22898fe949184"
     },
     "gtable": {
       "Package": "gtable",
@@ -2007,6 +2048,17 @@
       "Repository": "RSPM",
       "Hash": "643e16a7da6aac3e18cadc3e14abb94b"
     },
+    "pcaPP": {
+      "Package": "pcaPP",
+      "Version": "2.0-3",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "methods",
+        "mvtnorm"
+      ],
+      "Hash": "23ce0dcee63f1ed0327a6a08948a6625"
+    },
     "pillar": {
       "Package": "pillar",
       "Version": "1.9.0",
@@ -2170,6 +2222,18 @@
         "utils"
       ],
       "Hash": "dd2b9319ee0656c8acf45c7f40c59de7"
+    },
+    "pspline": {
+      "Package": "pspline",
+      "Version": "1.0-19",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "graphics",
+        "stats"
+      ],
+      "Hash": "c3b2cb25b3f5cd6ead9e3934170da0cf"
     },
     "purrr": {
       "Package": "purrr",
@@ -2632,6 +2696,17 @@
         "stats"
       ],
       "Hash": "9067f962730f58b14d8ae54ca885509f"
+    },
+    "stabledist": {
+      "Package": "stabledist",
+      "Version": "0.7-1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Requirements": [
+        "R",
+        "stats"
+      ],
+      "Hash": "dfd9740f06248fb6721d38df2e14ed7b"
     },
     "statmod": {
       "Package": "statmod",
