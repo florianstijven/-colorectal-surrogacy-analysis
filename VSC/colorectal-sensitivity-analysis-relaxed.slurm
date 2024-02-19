@@ -10,8 +10,7 @@
 export OMP_NUM_THREADS=1
 module list
 
-Rscript -e 'renv::run(script = "colorectal-sensitivity-analysis-relaxed.R", project = "/data/leuven/351/vsc35197/Surrogacy/-colorectal-surrogacy-analysis")' 
-
+Rscript colorectal-sensitivity-analysis-relaxed.R 36
 
 
 
