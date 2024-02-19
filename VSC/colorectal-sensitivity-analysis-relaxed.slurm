@@ -2,7 +2,7 @@
 #
 #SBATCH --job-name=colorectal
 #SBATCH --ntasks=1 --cpus-per-task=36 --mem-per-cpu=5000M
-#SBATCH --time=00:45:00
+#SBATCH --time=02:30:00
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH -A intro_vsc35197
 
@@ -14,7 +14,8 @@ module load GSL
 module load CMake
 module load R
 
-Rscript colorectal-model-fit-relaxed.R 36 $SLURM_SUBMIT_DIR
+Rscript -e 'renv::run(script = "colorectal-sensitivity-analysis-relaxed.R", project = "/data/leuven/351/vsc35197/Surrogacy/-colorectal-surrogacy-analysis")' 
+
 
 
 

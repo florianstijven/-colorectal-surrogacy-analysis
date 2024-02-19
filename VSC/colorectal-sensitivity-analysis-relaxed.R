@@ -1,19 +1,20 @@
 #!/usr/bin/env Rscript
 args = commandArgs(trailingOnly=TRUE)
-
+print(args)
 
 # Setup -------------------------------------------------------------------
-# Path to R libraries
-.libPaths(new = "/data/leuven/351/vsc35197/R")
-print(args)
+
 Sys.setenv(TZ='Europe/Brussels')
 ncores = as.integer(args[1])
-saveto = args[2]
+
 library(Surrogate)
 library(dplyr)
 
+# We need the best fitted vine copula model.
 best_fitted_model = readRDS("best-fitted-model.rds")
 
+# We define all different scenarios for the set of sensitivity analysis in the
+# scenarios_tbl.
 sensitivity_ranges = tibble(
   ranges = list(list(
     lower = c(0.5, 0, 0, 0.15),
@@ -25,13 +26,15 @@ sensitivity_ranges = tibble(
   range_class = c("Main Assumptions", "Relaxed Assumptions"),
   cond_ind = c(TRUE, FALSE)
 )
-
-# We list all sensitivity anlysis scenarios in the following tibble.
+# We consider all combinations of parameter ranges, unidentifiable copula
+# families, and ICA (Spearman's rho or SICC).
 scenarios_tbl = expand_grid(
   sensitivity_ranges,
   copula_family = c("gaussian", "frank", "gumbel", "clayton"),
   ICA_type = c("SICC", "Spearman's correlation")
 )
+# The SICC can be replaced with any measure by replacing the mutual information
+# estimator with an estimator of -0.5 * log(1 - measure).
 scenarios_tbl = scenarios_tbl %>%
   mutate(mutinfo_estimator = list(function(x, y) {
     -0.5 * log(1 - stats::cor(x, y, method = "spearman"))
@@ -52,9 +55,9 @@ sens_results_tbl = scenarios_tbl %>%
   summarize(
     sens_results = list(sensitivity_analysis_SurvSurv_copula(
       fitted_model = best_fitted_model,
-      n_sim = 3,
+      n_sim = 50,
       n_prec = 5000,
-      ncores = 1,
+      ncores = ncores,
       marg_association = TRUE,
       cond_ind = cond_ind,
       composite = TRUE,
@@ -74,7 +77,5 @@ print(Sys.time() - a)
 # analyzed in a separate file.
 saveRDS(
   object = sens_results_tbl,
-  file = paste0(saveto, "/sensitivity-analysis-results-relaxed.rds")
+  file = paste0(saveto, "sensitivity-analysis-results-relaxed.rds")
 )
-
-sens_results_tbl$sens_results[[1]]
