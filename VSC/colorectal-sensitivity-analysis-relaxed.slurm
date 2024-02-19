@@ -1,18 +1,14 @@
 #!/bin/bash
 #
-#SBATCH --job-name=colorectal
-#SBATCH --ntasks=1 --cpus-per-task=36 --mem-per-cpu=5000M
-#SBATCH --time=02:30:00
+#SBATCH --job-name=meta-TCT-simulations
+#SBATCH --ntasks=1 --cpus-per-task=36
+#SBATCH --time=01:00:00
+#SBATCH --cluster=wice
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH -A intro_vsc35197
+#SBATCH -A lp_doctoralresearch
 
-module unuse /apps/leuven/skylake/2018a/modules/all
-module use /apps/leuven/skylake/2021a/modules/all
-
-module purge
-module load GSL
-module load CMake
-module load R
+export OMP_NUM_THREADS=1
+module list
 
 Rscript -e 'renv::run(script = "colorectal-sensitivity-analysis-relaxed.R", project = "/data/leuven/351/vsc35197/Surrogacy/-colorectal-surrogacy-analysis")' 
 
