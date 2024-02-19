@@ -1,3 +1,4 @@
+# Setup -------------------------------------------------------------------
 set.seed(1)
 # Load the required packages
 library(tidyverse)
@@ -16,6 +17,9 @@ sens_results = read_rds("sensitivity-analysis-results-main.rds")
 best_fitted_model = read_rds("best-fitted-model.rds")
 # Path to save results
 path = "Figures/main/"
+
+
+# Results -----------------------------------------------------------------
 
 # Histogram for R_h.
 sens_results %>%
@@ -62,9 +66,15 @@ ggsave(filename = paste0(path, "colo_results_sprho.png"),
 
 # Compute Estimated intervals of ignorance and uncertainty.
 a = Sys.time()
-sensitivity_intervals = sensitivity_intervals_Dvine(
+sensitivity_intervals_Rh_subset = sensitivity_intervals_Dvine(
   fitted_model = best_fitted_model,
   sens_results = sens_results,
+  B = 200
+)
+sensitivity_intervals_sprho_full = sensitivity_intervals_Dvine(
+  fitted_model = best_fitted_model,
+  sens_results = sens_results,
+  measure = "sp_rho",
   B = 200
 )
 Sys.time() - a
