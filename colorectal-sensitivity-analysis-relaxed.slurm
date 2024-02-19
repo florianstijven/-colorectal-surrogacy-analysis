@@ -10,6 +10,7 @@
 export OMP_NUM_THREADS=1
 module list
 
+Rscript -e "renv::restore()"
 Rscript colorectal-sensitivity-analysis-relaxed.R 36
 
 
