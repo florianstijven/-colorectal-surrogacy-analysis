@@ -41,11 +41,12 @@ data %>%
 
 # After ensuring that the data are in the correct format, the survival-survival
 # model is fitted. Models are fitted for different combinations of the number of
-# knots and the parametric copula families.
+# internal knots and the parametric copula families.
 
 # Four parametric copula families are considered.
 possible_copulas = c("gaussian", "clayton", "frank", "gumbel")
-# 2 through 5 internal knots are considered.
+# 2 through 5 internal knots are considered. The same number of internal knots
+# are considered for each potential outcome, although this can be relaxed.
 possible_nknots = 2:5
 # Construct a tibble with all possible combinations of the number of internal
 # knots and the parametric copula families.
@@ -79,13 +80,12 @@ fitted_models = fitted_models %>%
   ) %>%
   arrange(AIC)
 
-# For each fitted model, model fit measures are obtained. Those are summarized
-# in a table which is sorted from lowest to highest AIC.
-fitted_models = fitted_models %>%
-  mutate(AIC = -2 * LogLik + (nknots + 2) * 4 + 2)
 # Print summary of all fitted models order from lowest to largest AIC. A lower
 # AIC corresponds to a better fit.
+sink(file = "fitted-models.txt") # Open connection to .txt file to print output to
+cat("Table of fitted models:\n\n")
 fitted_models
+
 
 # The best fitting model, in terms of AIC, is the Gaussian copula model with 2
 # internal knots. This model is extracted from the list of fitted models and
@@ -93,7 +93,9 @@ fitted_models
 # AIC, the best model is the first one.
 best_fitted_model = fitted_models$fitted_model[[1]]
 # Print summary of the selected model.
+cat("\nBest fitted model:\n\n")
 best_fitted_model
+sink() # Close connection to .txt file.
 
 
 # Goodness of Fit ---------------------------------------------------------
@@ -174,42 +176,7 @@ prob_dying_without_progression_plot(fitted_model = best_fitted_model,
 dev.off()
 
 
-# Sensitivity Analysis ----------------------------------------------------
+# Saving Results ----------------------------------------------------------
 
-# The sensitivity analysis is implemented in this file, but the results of the
-# sensitivity analysis are saved into an .csv file and processed elsewhere.
-# This is done because the sensitivity analysis is computer intensive and not
-# interactive; whereas processing the results is not computer intensive, but
-# interactive.
-
-# Run the sensitivity analysis with the main assumptions.
-set.seed(1)
-a = Sys.time()
-sens_results = sensitivity_analysis_SurvSurv_copula(
-  fitted_model = best_fitted_model,
-  n_sim = 5e3,
-  n_prec = 1e4,
-  ncores = 1,
-  marg_association = TRUE,
-  cond_ind = TRUE,
-  composite = TRUE,
-  degrees = 0,
-  copula_family2 = "gaussian",
-  lower = c(0.5, 0, 0, 0.15),
-  upper = c(0.95, 0, 0, 0.8)
-)
-print(Sys.time() - a)
-
-
-# Save Results ------------------------------------------------------------
-
-# The results of the sensitivity analysis are saved to a file. These results are
-# analyzed in a separate file.
-readr::write_csv(
-  x = sens_results,
-  file = "sensitivity-analysis-results-main.csv"
-)
-saveRDS(sens_results, file = "sensitivity-analysis-results-main.rds")
+saveRDS(fitted_models, file = "fitted-models.rds")
 saveRDS(best_fitted_model, file = "best-fitted-model.rds")
-
-

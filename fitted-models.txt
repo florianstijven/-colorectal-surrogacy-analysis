@@ -1,0 +1,70 @@
+Table of fitted models:
+
+# A tibble: 16 × 6
+   copula   nknots fitted_model LogLik    df    AIC
+   <chr>     <int> <list>        <dbl> <dbl>  <dbl>
+ 1 gaussian      2 <vn_c_SS_>   -5124.    18 10283.
+ 2 gaussian      3 <vn_c_SS_>   -5120.    22 10285.
+ 3 frank         2 <vn_c_SS_>   -5125.    18 10286.
+ 4 frank         3 <vn_c_SS_>   -5121.    22 10287.
+ 5 gaussian      4 <vn_c_SS_>   -5118.    26 10287.
+ 6 gaussian      5 <vn_c_SS_>   -5114.    30 10288.
+ 7 frank         4 <vn_c_SS_>   -5119.    26 10289.
+ 8 gumbel        2 <vn_c_SS_>   -5127.    18 10289.
+ 9 gumbel        3 <vn_c_SS_>   -5123.    22 10290.
+10 frank         5 <vn_c_SS_>   -5116.    30 10291.
+11 clayton       2 <vn_c_SS_>   -5128.    18 10291.
+12 clayton       3 <vn_c_SS_>   -5125.    22 10293.
+13 gumbel        4 <vn_c_SS_>   -5121.    26 10294.
+14 gumbel        5 <vn_c_SS_>   -5117.    30 10294.
+15 clayton       4 <vn_c_SS_>   -5122.    26 10296.
+16 clayton       5 <vn_c_SS_>   -5118.    30 10297.
+
+Best fitted model:
+
+Maximum Likelihood Estimate for Vine Copula Model (Survival-Survival)
+Copula Family: gaussian gaussian
+Number of Internal Knots: 2
+
+Summary of Maximum Likelihood fit for Treat = 0:
+--------------------------------------------
+Maximum Likelihood estimation
+BFGS maximization, 57 iterations
+Return code 0: successful convergence 
+Log-Likelihood: -2536.788 
+9  free parameters
+Estimates:
+               Estimate Std. error t value  Pr(> t)    
+gamma0 (S)     -8.77851    0.93777  -9.361  < 2e-16 ***
+gamma1 (S)      3.05311    0.44654   6.837 8.07e-12 ***
+gamma2 (S)      0.24372    0.13972   1.744   0.0811 .  
+gamma3 (S)     -0.13030    0.14492  -0.899   0.3686    
+gamma0 (T)     -6.10473    0.72101  -8.467  < 2e-16 ***
+gamma1 (T)      1.55654    0.31210   4.987 6.12e-07 ***
+gamma2 (T)      0.10479    0.14140   0.741   0.4586    
+gamma3 (T)     -0.12200    0.17762  -0.687   0.4922    
+theta (copula)  0.49516    0.07128   6.946 3.75e-12 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+--------------------------------------------
+Summary of Maximum Likelihood fit for Treat = 1:
+--------------------------------------------
+Maximum Likelihood estimation
+BFGS maximization, 60 iterations
+Return code 0: successful convergence 
+Log-Likelihood: -2586.907 
+9  free parameters
+Estimates:
+               Estimate Std. error t value  Pr(> t)    
+gamma0 (S)     -5.77749    0.69153  -8.355  < 2e-16 ***
+gamma1 (S)      1.36777    0.54750   2.498 0.012483 *  
+gamma2 (S)     -0.30594    0.10310  -2.967 0.003004 ** 
+gamma3 (S)      0.38255    0.10912   3.506 0.000455 ***
+gamma0 (T)     -6.07175    0.77256  -7.859 3.86e-15 ***
+gamma1 (T)      1.46096    0.30971   4.717 2.39e-06 ***
+gamma2 (T)     -0.04798    0.14097  -0.340 0.733554    
+gamma3 (T)      0.07090    0.15511   0.457 0.647606    
+theta (copula)  0.55482    0.07415   7.482 7.31e-14 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+--------------------------------------------
