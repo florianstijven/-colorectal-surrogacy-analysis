@@ -320,7 +320,7 @@
       "RemoteRepo": "Surrogate-development",
       "RemoteUsername": "florianstijven",
       "RemoteRef": "HEAD",
-      "RemoteSha": "95ead9be9c068c047fe3f325e22dcd91c5165cf5",
+      "RemoteSha": "f8d4bc3409c2ead1440b4e146b66f573a9514210",
       "Requirements": [
         "MASS",
         "MBESS",
@@ -342,7 +342,7 @@
         "survival",
         "tidyr"
       ],
-      "Hash": "341792b5a730f2b11430c8ceba7963f7"
+      "Hash": "941dcb34aa8173f95002c584c4e884b7"
     },
     "TH.data": {
       "Package": "TH.data",
