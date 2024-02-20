@@ -1,8 +1,8 @@
 # Setup -------------------------------------------------------------------
 
-ncores = 10
+ncores = 1
 # Number of MC replications in the sensitivity analysis
-n_sim = 1e2
+n_sim = 5e3
 # Number of MC samples for computing the ICA and related measures.
 n_prec = 1e4
 # Number of bootstrap replications for computing uncertainty intervals.
@@ -83,6 +83,7 @@ sensitivity_intervals_sprho_subset = sensitivity_intervals_Dvine(
   mutinfo_estimator = function(x, y) {
     -0.5 * log(1 - stats::cor(x, y, method = "spearman"))
   },
+  n_prec = n_prec
   B = B,
   ncores = ncores
 )
@@ -92,24 +93,24 @@ print(Sys.time() - a)
 
 # The results of the sensitivity analysis are saved to a file. These results are
 # analyzed in a separate file.
-saveRDS(
-  object = sens_results_sicc,
-  file = "results/sensitivity-analysis-results-main-sicc.rds"
-)
-saveRDS(
-  object = sensitivity_intervals_Rh_subset,
-  file ="results/sensitivity-intervals-Rh-subset.rds"
-)
-saveRDS(
-  object = sensitivity_intervals_sprho_full,
-  file ="results/sensitivity-intervals-sprho-full.rds"
-)
-
-saveRDS(
-  object = sens_results_sprho,
-  file = "results/sensitivity-analysis-results-main-sprho.rds"
-)
-saveRDS(
-  object = sensitivity_intervals_sprho_subset,
-  file ="results/sensitivity-intervals-sprho-subset.rds"
-)
+# saveRDS(
+#   object = sens_results_sicc,
+#   file = "results/sensitivity-analysis-results-main-sicc.rds"
+# )
+# saveRDS(
+#   object = sensitivity_intervals_Rh_subset,
+#   file ="results/sensitivity-intervals-Rh-subset.rds"
+# )
+# saveRDS(
+#   object = sensitivity_intervals_sprho_full,
+#   file ="results/sensitivity-intervals-sprho-full.rds"
+# )
+#
+# saveRDS(
+#   object = sens_results_sprho,
+#   file = "results/sensitivity-analysis-results-main-sprho.rds"
+# )
+# saveRDS(
+#   object = sensitivity_intervals_sprho_subset,
+#   file ="results/sensitivity-intervals-sprho-subset.rds"
+# )
