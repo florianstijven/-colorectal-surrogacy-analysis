@@ -4,7 +4,6 @@ print(args)
 
 # Setup -------------------------------------------------------------------
 
-Sys.setenv(TZ='Europe/Brussels')
 # Sandboxing takes a significant amount of time on the HPC and is therefore
 # disabled.
 options(renv.config.sandbox.enabled = FALSE)
