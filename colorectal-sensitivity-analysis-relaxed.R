@@ -74,6 +74,21 @@ wrapper_sensitivity_analysis = function(cond_ind, copula_family, lower, upper, m
     mutinfo_estimator = mutinfo_estimator
   )
 }
+# Similarly for the uncertainty intervals.
+wrapper_uncertainty_intervals = function(sens_results, mutinfo_estimator, measure) {
+  set.seed(1)
+  # We save some computational time if we do not compute the ICA when we're only
+  # looking at Spearman's rho in the full population.
+  if (measure == "sp_rho") mutinfo_estimator = function(x, y) return(0)
+  sensitivity_intervals_Dvine(
+    fitted_model = best_fitted_model,
+    sens_results = sens_results,
+    measure = measure,
+    mutinfo_estimator = mutinfo_estimator,
+    B = B,
+    ncores = ncores
+  )
+}
 
 # The sensitivity analysis is implemented in this file, but the results of the
 # sensitivity analysis are saved into an .RData file and processed elsewhere.
@@ -98,22 +113,10 @@ sens_results_tbl = sens_results_tbl %>%
   rowwise(everything()) %>%
   summarize(
     sens_interval_ICA_subset = list(
-      sensitivity_intervals_Dvine(
-        fitted_model = best_fitted_model,
-        sens_results = sens_results,
-        mutinfo_estimator = mutinfo_estimator,
-        B = B,
-        ncores = ncores
-      )
+      wrapper_uncertainty_intervals(sens_results, mutinfo_estimator, measure = "ICA")
     ),
     sens_interval_sprho_full = list(
-      sensitivity_intervals_Dvine(
-        fitted_model = best_fitted_model,
-        sens_results = sens_results,
-        mutinfo_estimator = mutinfo_estimator,
-        B = B,
-        ncores = ncores
-      )
+      wrapper_uncertainty_intervals(sens_results, mutinfo_estimator, measure = "sp_rho")
     )
   )
 print(Sys.time() - a)
