@@ -312,7 +312,7 @@
     },
     "Surrogate": {
       "Package": "Surrogate",
-      "Version": "3.2.1.9000",
+      "Version": "3.2.2",
       "Source": "GitHub",
       "Repository": "CRAN",
       "RemoteType": "github",
@@ -320,7 +320,7 @@
       "RemoteRepo": "Surrogate-development",
       "RemoteUsername": "florianstijven",
       "RemoteRef": "HEAD",
-      "RemoteSha": "e98fb1b139662af8a20fac7fcacb2772ce06a575",
+      "RemoteSha": "95ead9be9c068c047fe3f325e22dcd91c5165cf5",
       "Requirements": [
         "MASS",
         "MBESS",
@@ -342,7 +342,7 @@
         "survival",
         "tidyr"
       ],
-      "Hash": "b41ed0da1fb287776b5785174eee43e7"
+      "Hash": "341792b5a730f2b11430c8ceba7963f7"
     },
     "TH.data": {
       "Package": "TH.data",

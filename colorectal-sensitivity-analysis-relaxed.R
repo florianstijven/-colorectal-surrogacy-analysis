@@ -9,6 +9,12 @@ Sys.setenv(TZ='Europe/Brussels')
 # disabled.
 options(renv.config.sandbox.enabled = FALSE)
 ncores = as.integer(args[1])
+# Number of MC replications in the sensitivity analysis
+n_sim = 5e3
+# Number of MC samples for computing the ICA and related measures.
+n_prec = 1e4
+# Number of bootstrap replications for computing uncertainty intervals.
+B = 5e2
 
 library(Surrogate)
 library(dplyr)
@@ -55,16 +61,16 @@ wrapper_sensitivity_analysis = function(cond_ind, copula_family, lower, upper, m
   set.seed(1)
   sensitivity_analysis_SurvSurv_copula(
     fitted_model = best_fitted_model,
-    n_sim = 100,
-    n_prec = 5000,
+    n_sim = n_sim,
+    n_prec = n_prec,
     ncores = ncores,
     marg_association = TRUE,
     cond_ind = cond_ind,
     composite = TRUE,
     copula_family2 = copula_family,
     degrees = 0,
-    lower = ranges$lower,
-    upper = ranges$upper,
+    lower = lower,
+    upper = upper,
     mutinfo_estimator = mutinfo_estimator
   )
 }
@@ -78,23 +84,39 @@ a = Sys.time()
 sens_results_tbl = scenarios_tbl %>%
   rowwise(everything()) %>%
   summarize(
-    sens_results = list(sensitivity_analysis_SurvSurv_copula(
-      fitted_model = best_fitted_model,
-      n_sim = 100,
-      n_prec = 5000,
-      ncores = ncores,
-      marg_association = TRUE,
-      cond_ind = cond_ind,
-      composite = TRUE,
-      copula_family2 = copula_family,
-      degrees = 0,
-      lower = ranges$lower,
-      upper = ranges$upper,
-      mutinfo_estimator = mutinfo_estimator
+    sens_results = list(wrapper_sensitivity_analysis(
+      cond_ind,
+      copula_family,
+      ranges$lower,
+      ranges$upper,
+      mutinfo_estimator
     ))
+  ) %>%
+  ungroup()
+# The uncertainty intervals are computed as well.
+sens_results_tbl = sens_results_tbl %>%
+  rowwise(everything()) %>%
+  summarize(
+    sens_interval_ICA_subset = list(
+      sensitivity_intervals_Dvine(
+        fitted_model = best_fitted_model,
+        sens_results = sens_results,
+        mutinfo_estimator = mutinfo_estimator,
+        B = B,
+        ncores = ncores
+      )
+    ),
+    sens_interval_sprho_full = list(
+      sensitivity_intervals_Dvine(
+        fitted_model = best_fitted_model,
+        sens_results = sens_results,
+        mutinfo_estimator = mutinfo_estimator,
+        B = B,
+        ncores = ncores
+      )
+    )
   )
 print(Sys.time() - a)
-
 
 # Saving Results ----------------------------------------------------------
 

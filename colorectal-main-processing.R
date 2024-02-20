@@ -12,19 +12,13 @@ single_height = 8.2
 double_height = 12.8
 res = 600
 
-# Load results of the sensitivity analyses. We do not use the main sensitivity
-# analysis because the same results are available in
-# sensitivity-analysis-results-relaxed.rds (together with sensitivity analyses
-# under different assumptions).
-sens_results_relaxed = read_rds("results/sensitivity-analysis-results-relaxed.rds")
+# Load results of the main and relaxed sensitivity analyses.
+sens_results_main = readRDS("results/sensitivity-analysis-results-main.rds")
+sens_results_relaxed = readRDS("results/sensitivity-analysis-results-relaxed.rds")
 sens_results_relaxed_tbl = sens_results_relaxed %>%
   rowwise() %>%
   reframe(sens_results) %>%
   select(-ranges, -mutinfo_estimator)
-sens_results_main = sens_results_relaxed %>%
-  filter(copula_family == "gaussian", range_class == "Main Assumptions", cond_ind)
-sens_results_main_tbl = sens_results_relaxed_tbl %>%
-  filter(copula_family == "gaussian", range_class == "Main Assumptions", cond_ind)
 
 best_fitted_model = read_rds("results/best-fitted-model.rds")
 
@@ -33,15 +27,12 @@ path_main = "Figures/main/"
 path_relaxed = "Figures/relaxed/"
 path_other_copulas = "Figures/other-copulas/"
 
-
-
 # Histograms --------------------------------------------------------------
 
 # Histogram for ICA = R_h excluding patients that die before progressing under
-# both treatments; main analysis
-sens_results_relaxed %>%
-  filter(copula_family == "")
-  ggplot(aes(x = ICA)) +
+# both treatments; main analysis.
+sens_results_main %>%
+ggplot(aes(x = ICA)) +
   coord_cartesian(xlim = c(0, 1)) +
   scale_x_continuous(name = TeX("$R_h^2$")) +
   geom_histogram(
@@ -53,7 +44,31 @@ sens_results_relaxed %>%
   ) +
   scale_y_continuous(name = "Density") +
   theme_bw()
-ggsave(filename = paste0(path, "Rh-subset.png"),
+ggsave(filename = paste0(path_main, "Rh-subset.png"),
+       device = "png",
+       width = single_width,
+       height = single_height,
+       units = "cm",
+       dpi = res)
+
+# Histogram for ICA = R_h excluding patients that die before progressing under
+# both treatments; relaxed analyses.
+sens_results_relaxed_tbl %>%
+  filter(ICA_type == "SICC") %>%
+  ggplot(aes(x = ICA)) +
+  coord_cartesian(xlim = c(0, 1)) +
+  scale_x_continuous(name = TeX("$R_h^2$")) +
+  geom_histogram(
+    mapping = aes(y = after_stat(density)),
+    fill = "gray",
+    color = "black",
+    binwidth = 0.025,
+    boundary = 1,
+  ) +
+  scale_y_continuous(name = "Density") +
+  facet_grid(range_class~copula_family) +
+  theme_bw()
+ggsave(filename = paste0(path_relaxed, "Rh-subset.png"),
        device = "png",
        width = single_width,
        height = single_height,
@@ -61,25 +76,91 @@ ggsave(filename = paste0(path, "Rh-subset.png"),
        dpi = res)
 
 # Histogram for ICA = Spearman's rho excluding patients that die before
-# progressing under both treatments.
+# progressing under both treatments; main analysis.
+# sens_results_main %>%
+#   ggplot(aes(x = ICA)) +
+#   coord_cartesian(xlim = c(0, 1)) +
+#   scale_x_continuous(name = TeX("$R_h^2$")) +
+#   geom_histogram(
+#     mapping = aes(y = after_stat(density)),
+#     fill = "gray",
+#     color = "black",
+#     binwidth = 0.025,
+#     boundary = 1,
+#   ) +
+#   scale_y_continuous(name = "Density") +
+#   theme_bw()
+# ggsave(filename = paste0(path_main, "sprho-subset.png"),
+#        device = "png",
+#        width = single_width,
+#        height = single_height,
+#        units = "cm",
+#        dpi = res)
 
-
-
-# Histogram for ICA = Spearman's rho for the full population.
-sens_results %>%
-  ggplot(aes(x = sp_rho)) +
+# Histogram for ICA = Spearman's rho excluding patients that die before
+# progressing under both treatments; relaxed analyses.
+sens_results_relaxed_tbl %>%
+  filter(ICA_type == "Spearman's correlation") %>%
+  ggplot(aes(x = ICA)) +
   coord_cartesian(xlim = c(0, 1)) +
-  scale_x_continuous(name = TeX("$\\rho_s$")) +
+  scale_x_continuous(name = TeX("$\\rho_{sp}$")) +
   geom_histogram(
     mapping = aes(y = after_stat(density)),
     fill = "gray",
     color = "black",
     binwidth = 0.025,
-    boundary = 1
+    boundary = 1,
+  ) +
+  scale_y_continuous(name = "Density") +
+  facet_grid(range_class~copula_family) +
+  theme_bw()
+ggsave(filename = paste0(path_relaxed, "sprho-subset.png"),
+       device = "png",
+       width = single_width,
+       height = single_height,
+       units = "cm",
+       dpi = res)
+
+# Histogram for ICA = Spearman's rho for the full population; main analysis.
+sens_results_main %>%
+  ggplot(aes(x = sp_rho)) +
+  coord_cartesian(xlim = c(0, 1)) +
+  scale_x_continuous(name = TeX("$\\rho_{sp}$")) +
+  geom_histogram(
+    mapping = aes(y = after_stat(density)),
+    fill = "gray",
+    color = "black",
+    binwidth = 0.025,
+    boundary = 1,
   ) +
   scale_y_continuous(name = "Density") +
   theme_bw()
-ggsave(filename = paste0(path, "sp-rho-full.png"),
+ggsave(filename = paste0(path_main, "sprho-full.png"),
+       device = "png",
+       width = single_width,
+       height = single_height,
+       units = "cm",
+       dpi = res)
+
+# Histogram for ICA = Spearman's rho for the full population; relaxed analyses.
+# The results for sp_rho in the full population are repeated twice, once for
+# each value of ICA_type. We therefore select one ICA_type.
+sens_results_relaxed_tbl %>%
+  filter(ICA_type == "Spearman's correlation") %>%
+  ggplot(aes(x = sp_rho)) +
+  coord_cartesian(xlim = c(0, 1)) +
+  scale_x_continuous(name = TeX("$\\rho_{sp}$")) +
+  geom_histogram(
+    mapping = aes(y = after_stat(density)),
+    fill = "gray",
+    color = "black",
+    binwidth = 0.025,
+    boundary = 1,
+  ) +
+  scale_y_continuous(name = "Density") +
+  facet_grid(range_class~copula_family) +
+  theme_bw()
+ggsave(filename = paste0(path_relaxed, "sprho-full.png"),
        device = "png",
        width = single_width,
        height = single_height,
@@ -89,21 +170,11 @@ ggsave(filename = paste0(path, "sp-rho-full.png"),
 
 # Uncertainty Intervals ---------------------------------------------------
 
-# Compute Estimated intervals of ignorance and uncertainty.
-sink(file = "sensitivity-intervals-main")
-set.seed(1)
-sensitivity_intervals_Rh_subset = sensitivity_intervals_Dvine(
-  fitted_model = best_fitted_model,
-  sens_results = sens_results,
-  B = 200
-)
-set.seed(1)
-sensitivity_intervals_sprho_full = sensitivity_intervals_Dvine(
-  fitted_model = best_fitted_model,
-  sens_results = sens_results,
-  measure = "sp_rho",
-  B = 200
-)
+# Save sensitivity intervals to file for the main analysis.
+
+# Save sensitivity intervals to file for relaxed analysis.
+
+
 # Dependent Censoring -----------------------------------------------------
 
 # Proportions of dependent censoring of TTP by OS in both treatment groups.
