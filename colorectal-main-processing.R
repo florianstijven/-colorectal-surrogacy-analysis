@@ -12,17 +12,35 @@ single_height = 8.2
 double_height = 12.8
 res = 600
 
-# Load results of the sensitivity analysis
-sens_results = read_rds("sensitivity-analysis-results-main.rds")
+# Load results of the sensitivity analyses. We do not use the main sensitivity
+# analysis because the same results are available in
+# sensitivity-analysis-results-relaxed.rds (together with sensitivity analyses
+# under different assumptions).
+sens_results_relaxed = read_rds("sensitivity-analysis-results-relaxed.rds")
+sens_results_relaxed_tbl = sens_results_relaxed %>%
+  rowwise() %>%
+  reframe(sens_results) %>%
+  select(-ranges, -mutinfo_estimator)
+sens_results_main = sens_results_relaxed %>%
+  filter(copula_family == "gaussian", range_class == "Main Assumptions", cond_ind)
+sens_results_main_tbl = sens_results_relaxed_tbl %>%
+  filter(copula_family == "gaussian", range_class == "Main Assumptions", cond_ind)
+
 best_fitted_model = read_rds("best-fitted-model.rds")
+
 # Path to save results
-path = "Figures/main/"
+path_main = "Figures/main/"
+path_relaxed = "Figures/relaxed/"
+path_other_copulas = "Figures/other-copulas/"
 
 
-# Results -----------------------------------------------------------------
 
-# Histogram for R_h.
-sens_results %>%
+# Histograms --------------------------------------------------------------
+
+# Histogram for ICA = R_h excluding patients that die before progressing under
+# both treatments; main analysis
+sens_results_relaxed %>%
+  filter(copula_family == "")
   ggplot(aes(x = ICA)) +
   coord_cartesian(xlim = c(0, 1)) +
   scale_x_continuous(name = TeX("$R_h^2$")) +
@@ -35,15 +53,19 @@ sens_results %>%
   ) +
   scale_y_continuous(name = "Density") +
   theme_bw()
-ggsave(filename = paste0(path, "colo_results_ICA.png"),
+ggsave(filename = paste0(path, "Rh-subset.png"),
        device = "png",
        width = single_width,
        height = single_height,
        units = "cm",
        dpi = res)
 
+# Histogram for ICA = Spearman's rho excluding patients that die before
+# progressing under both treatments.
 
-# Histogram for Spearman's rho.
+
+
+# Histogram for ICA = Spearman's rho for the full population.
 sens_results %>%
   ggplot(aes(x = sp_rho)) +
   coord_cartesian(xlim = c(0, 1)) +
@@ -57,31 +79,50 @@ sens_results %>%
   ) +
   scale_y_continuous(name = "Density") +
   theme_bw()
-ggsave(filename = paste0(path, "colo_results_sprho.png"),
+ggsave(filename = paste0(path, "sp-rho-full.png"),
        device = "png",
        width = single_width,
        height = single_height,
        units = "cm",
        dpi = res)
 
+
+# Uncertainty Intervals ---------------------------------------------------
+
 # Compute Estimated intervals of ignorance and uncertainty.
-a = Sys.time()
+sink(file = "sensitivity-intervals-main")
+set.seed(1)
 sensitivity_intervals_Rh_subset = sensitivity_intervals_Dvine(
   fitted_model = best_fitted_model,
   sens_results = sens_results,
   B = 200
 )
+set.seed(1)
 sensitivity_intervals_sprho_full = sensitivity_intervals_Dvine(
   fitted_model = best_fitted_model,
   sens_results = sens_results,
   measure = "sp_rho",
   B = 200
 )
-Sys.time() - a
+# Dependent Censoring -----------------------------------------------------
 
 # Proportions of dependent censoring of TTP by OS in both treatment groups.
-mean(sens_results$prop_always + sens_results$prop_harmed)
-mean(sens_results$prop_always + sens_results$prop_protected)
+mean(sens_results$prop_never + sens_results$prop_harmed)
+mean(sens_results$prop_never + sens_results$prop_protected)
+
+# Principal Strata of Diseases Status -------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+# Additional Results ------------------------------------------------------
 
 # Additional exploration of how the assumptions translate to some easy to
 # interpret quantities. We first look at survival classification probabilities
@@ -149,5 +190,4 @@ ggsave(filename = paste0(path, "ggpairs_sp_rho.png"),
 sens_results %>%
   mutate(OR = (prop_always * prop_never) / (prop_harmed * prop_protected)) %>%
   summarise(min_OR = min(OR), max_OR = max(OR))
-
 

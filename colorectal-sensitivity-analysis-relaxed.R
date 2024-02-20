@@ -5,6 +5,9 @@ print(args)
 # Setup -------------------------------------------------------------------
 
 Sys.setenv(TZ='Europe/Brussels')
+# Sandboxing takes a significant amount of time on the HPC and is therefore
+# disabled.
+options(renv.config.sandbox.enabled = FALSE)
 ncores = as.integer(args[1])
 
 library(Surrogate)
@@ -46,12 +49,31 @@ scenarios_tbl$mutinfo_estimator[scenarios_tbl$ICA_type == "SICC"] = list(NULL)
 
 # Sensitivity Analysis ----------------------------------------------------
 
+# We use a wrapper function for the sensitivity analysis such that we set the
+# same seed for each different version of the sensitivity analysis.
+wrapper_sensitivity_analysis = function(cond_ind, copula_family, lower, upper, mutinfo_estimator) {
+  set.seed(1)
+  sensitivity_analysis_SurvSurv_copula(
+    fitted_model = best_fitted_model,
+    n_sim = 100,
+    n_prec = 5000,
+    ncores = ncores,
+    marg_association = TRUE,
+    cond_ind = cond_ind,
+    composite = TRUE,
+    copula_family2 = copula_family,
+    degrees = 0,
+    lower = ranges$lower,
+    upper = ranges$upper,
+    mutinfo_estimator = mutinfo_estimator
+  )
+}
+
 # The sensitivity analysis is implemented in this file, but the results of the
 # sensitivity analysis are saved into an .RData file and processed elsewhere.
 # This is done because the sensitivity analysis is computer intensive and not
 # interactive; whereas processing the results is not computer intensive, but
 # interactive.
-set.seed(1)
 a = Sys.time()
 sens_results_tbl = scenarios_tbl %>%
   rowwise(everything()) %>%
