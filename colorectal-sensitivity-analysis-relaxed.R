@@ -11,6 +11,7 @@ library(Surrogate)
 library(dplyr)
 library(tidyr)
 library(copula)
+library(FNN)
 
 # We need the best fitted vine copula model.
 best_fitted_model = readRDS("best-fitted-model.rds")
@@ -57,7 +58,7 @@ sens_results_tbl = scenarios_tbl %>%
   summarize(
     sens_results = list(sensitivity_analysis_SurvSurv_copula(
       fitted_model = best_fitted_model,
-      n_sim = 50,
+      n_sim = 100,
       n_prec = 5000,
       ncores = ncores,
       marg_association = TRUE,
@@ -79,5 +80,5 @@ print(Sys.time() - a)
 # analyzed in a separate file.
 saveRDS(
   object = sens_results_tbl,
-  file = paste0(saveto, "sensitivity-analysis-results-relaxed.rds")
+  file = paste0("sensitivity-analysis-results-relaxed.rds")
 )
