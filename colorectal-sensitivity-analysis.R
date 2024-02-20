@@ -3,7 +3,7 @@
 library(Surrogate)
 library(tidyverse)
 # Load the best fitted model.
-best_fitted_model = readRDS("best-fitted-model.rds")
+best_fitted_model = readRDS("results/best-fitted-model.rds")
 
 
 # Sensitivity Analysis ----------------------------------------------------
@@ -38,5 +38,5 @@ print(Sys.time() - a)
 # analyzed in a separate file.
 saveRDS(
   object = sens_results,
-  file = "sensitivity-analysis-results-main.rds"
+  file = "results/sensitivity-analysis-results-main.rds"
 )

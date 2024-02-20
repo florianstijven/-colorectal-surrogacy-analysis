@@ -82,7 +82,7 @@ fitted_models = fitted_models %>%
 
 # Print summary of all fitted models order from lowest to largest AIC. A lower
 # AIC corresponds to a better fit.
-sink(file = "fitted-models.txt") # Open connection to .txt file to print output to
+sink(file = "results/fitted-models.txt") # Open connection to .txt file to print output to
 cat("Table of fitted models:\n\n")
 fitted_models
 
@@ -178,5 +178,5 @@ dev.off()
 
 # Saving Results ----------------------------------------------------------
 
-saveRDS(fitted_models, file = "fitted-models.rds")
-saveRDS(best_fitted_model, file = "best-fitted-model.rds")
+saveRDS(fitted_models, file = "results/fitted-models.rds")
+saveRDS(best_fitted_model, file = "results/best-fitted-model.rds")

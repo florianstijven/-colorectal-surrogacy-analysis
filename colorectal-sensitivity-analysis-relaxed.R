@@ -17,7 +17,7 @@ library(copula)
 library(FNN)
 
 # We need the best fitted vine copula model.
-best_fitted_model = readRDS("best-fitted-model.rds")
+best_fitted_model = readRDS("results/best-fitted-model.rds")
 
 # We define all different scenarios for the set of sensitivity analysis in the
 # scenarios_tbl.
@@ -102,5 +102,5 @@ print(Sys.time() - a)
 # analyzed in a separate file.
 saveRDS(
   object = sens_results_tbl,
-  file = paste0("sensitivity-analysis-results-relaxed.rds")
+  file = "results/sensitivity-analysis-results-relaxed.rds"
 )

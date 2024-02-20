@@ -16,7 +16,7 @@ res = 600
 # analysis because the same results are available in
 # sensitivity-analysis-results-relaxed.rds (together with sensitivity analyses
 # under different assumptions).
-sens_results_relaxed = read_rds("sensitivity-analysis-results-relaxed.rds")
+sens_results_relaxed = read_rds("results/sensitivity-analysis-results-relaxed.rds")
 sens_results_relaxed_tbl = sens_results_relaxed %>%
   rowwise() %>%
   reframe(sens_results) %>%
@@ -26,7 +26,7 @@ sens_results_main = sens_results_relaxed %>%
 sens_results_main_tbl = sens_results_relaxed_tbl %>%
   filter(copula_family == "gaussian", range_class == "Main Assumptions", cond_ind)
 
-best_fitted_model = read_rds("best-fitted-model.rds")
+best_fitted_model = read_rds("results/best-fitted-model.rds")
 
 # Path to save results
 path_main = "Figures/main/"
