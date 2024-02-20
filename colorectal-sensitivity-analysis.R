@@ -1,5 +1,6 @@
 # Setup -------------------------------------------------------------------
 
+Sys.setenv(TZ='Europe/Brussels')
 ncores = 10
 # Number of MC replications in the sensitivity analysis
 n_sim = 5e3
