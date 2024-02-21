@@ -41,6 +41,7 @@ set.seed(1)
 sensitivity_intervals_Rh_subset = sensitivity_intervals_Dvine(
   fitted_model = best_fitted_model,
   sens_results = sens_results_sicc,
+  n_prec = n_prec,
   B = B,
   ncores = ncores
 )
@@ -49,6 +50,7 @@ sensitivity_intervals_sprho_full = sensitivity_intervals_Dvine(
   fitted_model = best_fitted_model,
   sens_results = sens_results_sicc,
   measure = "sp_rho",
+  n_prec = n_prec,
   B = B,
   ncores = ncores
 )

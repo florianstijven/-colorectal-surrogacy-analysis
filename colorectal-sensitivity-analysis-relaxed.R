@@ -84,6 +84,7 @@ wrapper_uncertainty_intervals = function(sens_results, mutinfo_estimator, measur
     sens_results = sens_results,
     measure = measure,
     mutinfo_estimator = mutinfo_estimator,
+    n_prec = n_prec,
     B = B,
     ncores = ncores
   )
