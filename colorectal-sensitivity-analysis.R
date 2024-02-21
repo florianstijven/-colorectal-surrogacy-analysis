@@ -1,6 +1,6 @@
 # Setup -------------------------------------------------------------------
 
-ncores = 1
+ncores = 10
 # Number of MC replications in the sensitivity analysis
 n_sim = 5e3
 # Number of MC samples for computing the ICA and related measures.
