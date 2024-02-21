@@ -83,7 +83,7 @@ sensitivity_intervals_sprho_subset = sensitivity_intervals_Dvine(
   mutinfo_estimator = function(x, y) {
     -0.5 * log(1 - stats::cor(x, y, method = "spearman"))
   },
-  n_prec = n_prec
+  n_prec = n_prec,
   B = B,
   ncores = ncores
 )
