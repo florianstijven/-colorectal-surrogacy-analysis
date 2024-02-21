@@ -22,38 +22,38 @@ best_fitted_model = readRDS("results/best-fitted-model.rds")
 
 # Run the sensitivity analysis with the main assumptions once for ICA = SICC and
 # once for ICA = Spearman's rho.
-# set.seed(1)
-# a = Sys.time()
-# sens_results_sicc = sensitivity_analysis_SurvSurv_copula(
-#   fitted_model = best_fitted_model,
-#   n_sim = n_sim,
-#   n_prec = n_prec,
-#   ncores = ncores,
-#   marg_association = TRUE,
-#   cond_ind = TRUE,
-#   composite = TRUE,
-#   degrees = 0,
-#   copula_family2 = "gaussian",
-#   lower = c(0.5, 0, 0, 0.15),
-#   upper = c(0.95, 0, 0, 0.8)
-# )
-# set.seed(1)
-# sensitivity_intervals_Rh_subset = sensitivity_intervals_Dvine(
-#   fitted_model = best_fitted_model,
-#   sens_results = sens_results_sicc,
-#   B = B,
-#   ncores = ncores
-# )
-# set.seed(1)
-# sensitivity_intervals_sprho_full = sensitivity_intervals_Dvine(
-#   fitted_model = best_fitted_model,
-#   sens_results = sens_results_sicc,
-#   measure = "sp_rho",
-#   B = B,
-#   ncores = ncores
-# )
-# print(Sys.time() - a)
-# set.seed(1)
+set.seed(1)
+a = Sys.time()
+sens_results_sicc = sensitivity_analysis_SurvSurv_copula(
+  fitted_model = best_fitted_model,
+  n_sim = n_sim,
+  n_prec = n_prec,
+  ncores = ncores,
+  marg_association = TRUE,
+  cond_ind = TRUE,
+  composite = TRUE,
+  degrees = 0,
+  copula_family2 = "gaussian",
+  lower = c(0.5, 0, 0, 0.15),
+  upper = c(0.95, 0, 0, 0.8)
+)
+set.seed(1)
+sensitivity_intervals_Rh_subset = sensitivity_intervals_Dvine(
+  fitted_model = best_fitted_model,
+  sens_results = sens_results_sicc,
+  B = B,
+  ncores = ncores
+)
+set.seed(1)
+sensitivity_intervals_sprho_full = sensitivity_intervals_Dvine(
+  fitted_model = best_fitted_model,
+  sens_results = sens_results_sicc,
+  measure = "sp_rho",
+  B = B,
+  ncores = ncores
+)
+print(Sys.time() - a)
+set.seed(1)
 
 # The SICC can be replaced with any measure by replacing the mutual information
 # estimator with an estimator of -0.5 * log(1 - measure); next, we use measure =
@@ -93,24 +93,24 @@ print(Sys.time() - a)
 
 # The results of the sensitivity analysis are saved to a file. These results are
 # analyzed in a separate file.
-# saveRDS(
-#   object = sens_results_sicc,
-#   file = "results/sensitivity-analysis-results-main-sicc.rds"
-# )
-# saveRDS(
-#   object = sensitivity_intervals_Rh_subset,
-#   file ="results/sensitivity-intervals-Rh-subset.rds"
-# )
-# saveRDS(
-#   object = sensitivity_intervals_sprho_full,
-#   file ="results/sensitivity-intervals-sprho-full.rds"
-# )
-#
-# saveRDS(
-#   object = sens_results_sprho,
-#   file = "results/sensitivity-analysis-results-main-sprho.rds"
-# )
-# saveRDS(
-#   object = sensitivity_intervals_sprho_subset,
-#   file ="results/sensitivity-intervals-sprho-subset.rds"
-# )
+saveRDS(
+  object = sens_results_sicc,
+  file = "results/sensitivity-analysis-results-main-sicc.rds"
+)
+saveRDS(
+  object = sensitivity_intervals_Rh_subset,
+  file ="results/sensitivity-intervals-Rh-subset.rds"
+)
+saveRDS(
+  object = sensitivity_intervals_sprho_full,
+  file ="results/sensitivity-intervals-sprho-full.rds"
+)
+
+saveRDS(
+  object = sens_results_sprho,
+  file = "results/sensitivity-analysis-results-main-sprho.rds"
+)
+saveRDS(
+  object = sensitivity_intervals_sprho_subset,
+  file ="results/sensitivity-intervals-sprho-subset.rds"
+)
