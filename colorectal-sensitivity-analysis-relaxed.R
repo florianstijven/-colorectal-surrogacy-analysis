@@ -32,7 +32,7 @@ sensitivity_ranges = tibble(
     upper = c(0.95, 0, 0, 0.8)
   ), list(
     lower = c(0.25, 0, 0, 0.05),
-    upper = c(0.95, 0.3, 0.3, 0.8)
+    upper = c(0.975, 0.3, 0.3, 0.90)
   )),
   range_class = c("Main Assumptions", "Relaxed Assumptions"),
   cond_ind = c(TRUE, FALSE)
@@ -64,7 +64,7 @@ wrapper_sensitivity_analysis = function(cond_ind, copula_family, lower, upper, m
     n_prec = n_prec,
     ncores = ncores,
     marg_association = TRUE,
-    cond_ind = cond_ind,
+    eq_cond_association = TRUE,
     composite = TRUE,
     copula_family2 = copula_family,
     degrees = 0,

@@ -312,7 +312,7 @@
     },
     "Surrogate": {
       "Package": "Surrogate",
-      "Version": "3.2.2",
+      "Version": "3.2.2.9000",
       "Source": "GitHub",
       "Repository": "CRAN",
       "RemoteType": "github",
@@ -320,7 +320,7 @@
       "RemoteRepo": "Surrogate-development",
       "RemoteUsername": "florianstijven",
       "RemoteRef": "HEAD",
-      "RemoteSha": "dc7bbd933a9f0e0113964fbeb7efb8742cdc8c26",
+      "RemoteSha": "e27ac0ea4fdc5019df79e9471d1b9a15f5f15bed",
       "Requirements": [
         "MASS",
         "MBESS",
@@ -342,7 +342,7 @@
         "survival",
         "tidyr"
       ],
-      "Hash": "7b0b194593edd2724771d656cdfc3b8e"
+      "Hash": "20fb2310b0cc315f61fd11b9b54d2c1f"
     },
     "TH.data": {
       "Package": "TH.data",
@@ -572,16 +572,16 @@
     },
     "callr": {
       "Package": "callr",
-      "Version": "3.7.3",
+      "Version": "3.7.5",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Requirements": [
         "R",
         "R6",
         "processx",
         "utils"
       ],
-      "Hash": "9b2191ede20fa29828139b9900922e51"
+      "Hash": "9f0e4fae4963ba775a5e5c520838c87b"
     },
     "cellranger": {
       "Package": "cellranger",
