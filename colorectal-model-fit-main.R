@@ -110,73 +110,97 @@ plot(best_fitted_model, grid = grid)
 # The plot() method automatically runs all GoF plots. In order to save them
 # one-by-one. We call the functions that produce only single plots one-by-one.
 pdf(file = paste0(save_to, "marginal-gof-s0.pdf"), width = double_width, height = double_height)
-marginal_gof_scr_S_plot(fitted_model = best_fitted_model,
-                        grid = grid,
-                        treated = 0,
-                        main = "Survival Function S - Control Treatment",
-                        xlab = "t (months)",
-                        ylab = "P(S > t)")
+marginal_gof_scr_S_plot(
+  fitted_model = best_fitted_model,
+  grid = grid,
+  treated = 0,
+  main = "Survival Function S - Control Treatment",
+  xlab = "t (months)",
+  ylab = "P(S > t)",
+  xlim = c(0, 250)
+)
 dev.off()
 pdf(file = paste0(save_to, "marginal-gof-s1.pdf"), width = double_width, height = double_height)
-marginal_gof_scr_S_plot(fitted_model = best_fitted_model,
-                        grid = grid,
-                        treated = 1,
-                        main = "Survival Function S - Active Treatment",
-                        xlab = "t (months)",
-                        ylab = "P(S > t)")
+marginal_gof_scr_S_plot(
+  fitted_model = best_fitted_model,
+  grid = grid,
+  treated = 1,
+  main = "Survival Function S - Active Treatment",
+  xlab = "t (months)",
+  ylab = "P(S > t)",
+  xlim = c(0, 250)
+)
 dev.off()
 pdf(file = paste0(save_to, "marginal-gof-t0.pdf"), width = double_width, height = double_height)
-marginal_gof_scr_T_plot(fitted_model = best_fitted_model,
-                        grid = grid,
-                        treated = 0,
-                        main = "Survival Function T - Control Treatment",
-                        xlab = "t (months)",
-                        ylab = "P(T > t)")
+marginal_gof_scr_T_plot(
+  fitted_model = best_fitted_model,
+  grid = grid,
+  treated = 0,
+  main = "Survival Function T - Control Treatment",
+  xlab = "t (months)",
+  ylab = "P(T > t)",
+  xlim = c(0, 250)
+)
 dev.off()
 pdf(file = paste0(save_to, "marginal-gof-t1.pdf"), width = double_width, height = double_height)
-marginal_gof_scr_T_plot(fitted_model = best_fitted_model,
-                        grid = grid,
-                        treated = 1,
-                        main = "Survival Function T - Active Treatment",
-                        xlab = "t (months)",
-                        ylab = "P(T > t)")
+marginal_gof_scr_T_plot(
+  fitted_model = best_fitted_model,
+  grid = grid,
+  treated = 1,
+  main = "Survival Function T - Active Treatment",
+  xlab = "t (months)",
+  ylab = "P(T > t)",
+  xlim = c(0, 250)
+)
 dev.off()
 
 pdf(file = paste0(save_to, "mean-S-before-T-gof0.pdf"), width = double_width, height = double_height)
-mean_S_before_T_plot_scr(fitted_model = best_fitted_model,
-                         grid = grid,
-                         treated = 0,
-                         xlab = "t (months)",
-                         ylab = "E(S | T = t, S < T)",
-                         col = "gray",
-                         main = "Control Treatment")
+mean_S_before_T_plot_scr(
+  fitted_model = best_fitted_model,
+  grid = grid,
+  treated = 0,
+  xlab = "t (months)",
+  ylab = "E(S | T = t, S < T)",
+  col = "gray",
+  main = "Control Treatment",
+  xlim = c(0, 250)
+)
 dev.off()
 pdf(file = paste0(save_to, "mean-S-before-T-gof1.pdf"), width = double_width, height = double_height)
-mean_S_before_T_plot_scr(fitted_model = best_fitted_model,
-                         grid = grid,
-                         treated = 1,
-                         xlab = "t (months)",
-                         ylab = "E(S | T = t, S < T)",
-                         col = "gray",
-                         main = "Active Treatment")
+mean_S_before_T_plot_scr(
+  fitted_model = best_fitted_model,
+  grid = grid,
+  treated = 1,
+  xlab = "t (months)",
+  ylab = "E(S | T = t, S < T)",
+  col = "gray",
+  main = "Active Treatment",
+  xlim = c(0, 250)
+)
 dev.off()
 pdf(file = paste0(save_to, "prob-dying-gof0.pdf"), width = double_width, height = double_height)
-prob_dying_without_progression_plot(fitted_model = best_fitted_model,
-                                    grid = grid,
-                                    treated = 0,
-                                    xlab = "t (months)",
-                                    ylab = "P(S = T | T = t)",
-                                    col = "gray",
-                                    main = "Control Treatment")
+prob_dying_without_progression_plot(
+  fitted_model = best_fitted_model,
+  grid = grid,
+  treated = 0,
+  xlab = "t (months)",
+  ylab = "P(S = T | T = t)",
+  col = "gray",
+  main = "Control Treatment",
+  xlim = c(0, 250)
+)
 dev.off()
 pdf(file = paste0(save_to, "prob-dying-gof1.pdf"), width = double_width, height = double_height)
-prob_dying_without_progression_plot(fitted_model = best_fitted_model,
-                                    grid = grid,
-                                    treated = 1,
-                                    xlab = "t (months)",
-                                    ylab = "P(S = T | T = t)",
-                                    col = "gray",
-                                    main = "Active Treatment")
+prob_dying_without_progression_plot(
+  fitted_model = best_fitted_model,
+  grid = grid,
+  treated = 1,
+  xlab = "t (months)",
+  ylab = "P(S = T | T = t)",
+  col = "gray",
+  main = "Active Treatment",
+  xlim = c(0, 250)
+)
 dev.off()
 
 
