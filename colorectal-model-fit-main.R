@@ -84,7 +84,11 @@ fitted_models = fitted_models %>%
 # AIC corresponds to a better fit.
 sink(file = "results/fitted-models.txt") # Open connection to .txt file to print output to
 cat("Table of fitted models:\n\n")
-fitted_models
+print(fitted_models %>%
+        mutate(
+          LogLik = num(LogLik, digits = 2),
+          AIC = num(AIC, digits = 2)
+        ))
 
 
 # The best fitting model, in terms of AIC, is the Gaussian copula model with 2
