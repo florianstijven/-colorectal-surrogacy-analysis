@@ -31,7 +31,7 @@ sensitivity_ranges = tibble(
     lower = c(0.5, 0, 0, 0.15),
     upper = c(0.95, 0, 0, 0.8)
   ), list(
-    lower = c(0.25, 0, 0, 0.05),
+    lower = c(0.35, 0, 0, 0.05),
     upper = c(0.975, 0.3, 0.3, 0.90)
   )),
   range_class = c("Main Assumptions", "Relaxed Assumptions"),
