@@ -9,7 +9,8 @@ double_width = 14 / 2.54
 single_height = 8.2 / 2.54
 double_height = 12.8 / 2.54
 res = 600
-save_to = "Figures/Model Fit/"
+save_to_main = "paper-figures-tables/main-text/"
+save_to_appendix = "paper-figures-tables/appendix/"
 
 # Put the data in correct format: (x_i, y_i, z_i, \delta_i^X, \delta_i^Y). This
 # is also explained in the help files of Surrogate::fit_model_SurvSurv.
@@ -82,19 +83,21 @@ fitted_models = fitted_models %>%
 
 # Print summary of all fitted models order from lowest to largest AIC. A lower
 # AIC corresponds to a better fit.
-sink(file = "results/fitted-models.txt") # Open connection to .txt file to print output to
+sink(file = paste0(save_to_appendix, "fitted-models.txt")) # Open connection to .txt file to print output to
 cat("Table of fitted models:\n\n")
 print(fitted_models %>%
         mutate(
           LogLik = num(LogLik, digits = 2),
           AIC = num(AIC, digits = 2)
         ))
+sink()
 
 
 # The best fitting model, in terms of AIC, is the Gaussian copula model with 2
 # internal knots. This model is extracted from the list of fitted models and
 # named best_fitted_model. Since the fitted_models tibble is already sorted on
 # AIC, the best model is the first one.
+sink(file = "results/best-fitted-model-summary.txt")
 best_fitted_model = fitted_models$fitted_model[[1]]
 # Print summary of the selected model.
 cat("\nBest fitted model:\n\n")
@@ -109,7 +112,7 @@ grid = seq(from = 1, to = 250, length.out = 400)
 plot(best_fitted_model, grid = grid)
 # The plot() method automatically runs all GoF plots. In order to save them
 # one-by-one. We call the functions that produce only single plots one-by-one.
-pdf(file = paste0(save_to, "marginal-gof-s0.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_main, "marginal-gof-s0.pdf"), width = double_width, height = double_height)
 marginal_gof_scr_S_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -120,7 +123,7 @@ marginal_gof_scr_S_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to, "marginal-gof-s1.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_appendix, "marginal-gof-s1.pdf"), width = double_width, height = double_height)
 marginal_gof_scr_S_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -131,7 +134,7 @@ marginal_gof_scr_S_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to, "marginal-gof-t0.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_main, "marginal-gof-t0.pdf"), width = double_width, height = double_height)
 marginal_gof_scr_T_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -142,7 +145,7 @@ marginal_gof_scr_T_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to, "marginal-gof-t1.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_appendix, "marginal-gof-t1.pdf"), width = double_width, height = double_height)
 marginal_gof_scr_T_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -154,7 +157,7 @@ marginal_gof_scr_T_plot(
 )
 dev.off()
 
-pdf(file = paste0(save_to, "mean-S-before-T-gof0.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_main, "mean-S-before-T-gof0.pdf"), width = double_width, height = double_height)
 mean_S_before_T_plot_scr(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -166,7 +169,7 @@ mean_S_before_T_plot_scr(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to, "mean-S-before-T-gof1.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_appendix, "mean-S-before-T-gof1.pdf"), width = double_width, height = double_height)
 mean_S_before_T_plot_scr(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -178,7 +181,7 @@ mean_S_before_T_plot_scr(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to, "prob-dying-gof0.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_main, "prob-dying-gof0.pdf"), width = double_width, height = double_height)
 prob_dying_without_progression_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -190,7 +193,7 @@ prob_dying_without_progression_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to, "prob-dying-gof1.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_appendix, "prob-dying-gof1.pdf"), width = double_width, height = double_height)
 prob_dying_without_progression_plot(
   fitted_model = best_fitted_model,
   grid = grid,

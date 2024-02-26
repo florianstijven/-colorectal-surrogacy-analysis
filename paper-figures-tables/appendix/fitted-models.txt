@@ -1,0 +1,21 @@
+Table of fitted models:
+
+# A tibble: 16 × 6
+   copula   nknots fitted_model    LogLik    df       AIC
+   <chr>     <int> <list>       <num:.2!> <dbl> <num:.2!>
+ 1 gaussian      2 <vn_c_SS_>    -5123.70    18  10283.39
+ 2 gaussian      3 <vn_c_SS_>    -5120.37    22  10284.75
+ 3 frank         2 <vn_c_SS_>    -5125.04    18  10286.08
+ 4 frank         3 <vn_c_SS_>    -5121.33    22  10286.65
+ 5 gaussian      4 <vn_c_SS_>    -5117.74    26  10287.48
+ 6 gaussian      5 <vn_c_SS_>    -5114.19    30  10288.38
+ 7 frank         4 <vn_c_SS_>    -5118.69    26  10289.38
+ 8 gumbel        2 <vn_c_SS_>    -5126.72    18  10289.44
+ 9 gumbel        3 <vn_c_SS_>    -5123.10    22  10290.19
+10 frank         5 <vn_c_SS_>    -5115.60    30  10291.20
+11 clayton       2 <vn_c_SS_>    -5127.70    18  10291.40
+12 clayton       3 <vn_c_SS_>    -5124.53    22  10293.06
+13 gumbel        4 <vn_c_SS_>    -5120.77    26  10293.54
+14 gumbel        5 <vn_c_SS_>    -5116.86    30  10293.73
+15 clayton       4 <vn_c_SS_>    -5121.81    26  10295.63
+16 clayton       5 <vn_c_SS_>    -5118.42    30  10296.84

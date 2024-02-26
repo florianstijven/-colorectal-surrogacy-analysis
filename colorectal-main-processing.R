@@ -39,10 +39,12 @@ sens_results_relaxed_tbl = sens_results_relaxed %>%
 
 best_fitted_model = read_rds("results/best-fitted-model.rds")
 
-# Path to save results
-path_main = "Figures/main/"
-path_relaxed = "Figures/relaxed/"
-path_other_copulas = "Figures/other-copulas/"
+# Path to save results that appear in the paper or its appendices.
+save_to_main = "paper-figures-tables/main-text/"
+save_to_appendix = "paper-figures-tables/appendix/"
+# Other results are saved into a separate directory.
+path_main = "additional-figures-tables/main-analysis/"
+path_relaxed = "additional-figures-tables/relaxed-analysis/"
 
 # Histograms --------------------------------------------------------------
 
@@ -61,7 +63,7 @@ ggplot(aes(x = ICA)) +
   ) +
   scale_y_continuous(name = "Density") +
   theme_bw()
-ggsave(filename = paste0(path_main, "Rh-subset.png"),
+ggsave(filename = paste0(save_to_main, "Rh-subset.png"),
        device = "png",
        width = single_width,
        height = single_height,
@@ -192,7 +194,7 @@ ggsave(filename = paste0(path_relaxed, "sprho-full.png"),
 
 # To prevent having to run this file mutliple times, the sensitivity intervals
 # are printed to a .txt file.
-sink(file = paste0(path_main, "sensitivity-intervals.txt"))
+sink(file = paste0(save_to_main, "sensitivity-intervals.txt"))
 cat(paste(rep("=", 80), collapse = '')); cat("\n\n")
 cat("ICA  = SICC in the subpopulation of patients where patients with S_0 = T_0 AND S_1 = T_1 are excluded.\n\n")
 print(sensitivity_intervals_sicc_subset)
@@ -212,50 +214,62 @@ sink()
 interval_paste = function(interval, digits = 3) {
   paste0("(", round(interval[1], digits), ", ", round(interval[2], digits), ")")
 }
-sink(file = paste0(path_relaxed, "sensitivity-intervals.txt"))
+sink(file = paste0(save_to_appendix, "sensitivity-intervals-relaxed.txt"))
 sens_results_relaxed %>%
   ungroup() %>%
   rowwise(c("range_class", "copula_family", "ICA_type")) %>%
   summarise(
-    "Est. ignorance interval, ICA in subset" = interval_paste(sens_interval_ICA_subset$est_interval_of_ignorance),
-    "Uncertainty interval (pointwise), ICA in subset" = interval_paste(sens_interval_ICA_subset$interval_of_uncertainty_pointwise_coverage),
-    "Est. ignorance interval, ICA = sp_rho in full pop." = interval_paste(sens_interval_sprho_full$est_interval_of_ignorance),
-    "Uncertainty interval (pointwise), ICA = sp_rho in full pop." = interval_paste(sens_interval_sprho_full$interval_of_uncertainty_pointwise_coverage),
+    "Est. II, ICA in subset" = interval_paste(sens_interval_ICA_subset$est_interval_of_ignorance, 2),
+    "UI (pointwise), ICA in subset" = interval_paste(
+      sens_interval_ICA_subset$interval_of_uncertainty_pointwise_coverage,
+      2
+    ),
+    "Est. II, ICA = sp_rho in full pop." = interval_paste(sens_interval_sprho_full$est_interval_of_ignorance, 2),
+    "UI (pointwise), ICA = sp_rho in full pop." = interval_paste(
+      sens_interval_sprho_full$interval_of_uncertainty_pointwise_coverage,
+      2
+    ),
   ) %>%
-  ungroup()
+  ungroup() %>%
+  pivot_wider(names_from = "ICA_type", values_from = 4:7) %>%
+  select(c(1, 2, 3, 5, 4, 6, 7, 9)) %>%
+  knitr::kable(format = "latex") %>%
+  print()
 sink()
 
 # Dependent Censoring -----------------------------------------------------
 
-# Proportions of dependent censoring of TTP by OS in both treatment groups.
-mean(sens_results_main_sicc$prop_never + sens_results_main_sicc$prop_harmed)
-mean(sens_results_main_sicc$prop_never + sens_results_main_sicc$prop_protected)
+# Proportions of dependent censoring of TTP by OS in both treatment groups:
+# P(S_0 = T_0) = 0.333 and P(S_1 = T_1) = 0.304.
+sink(file = paste0(save_to_appendix, "proportion-dependent-censoring.txt"))
+cat("Estimated proportion dependent censoring for Z = 0: P(S_0 = T_0) = ")
+cat(mean(sens_results_main_sicc$prop_never + sens_results_main_sicc$prop_harmed))
+cat("\n")
+cat("Estimated proportion dependent censoring for Z = 1: P(S_1 = T_1) = ")
+cat(mean(sens_results_main_sicc$prop_never + sens_results_main_sicc$prop_protected))
+sink()
 
 # Additional Results ------------------------------------------------------
 
 # Additional exploration of how the assumptions translate to some easy to
 # interpret quantities. We first look at survival classification probabilities
 # in all simulated scenarios.
+sink(file = paste0(save_to_appendix, "ranges-population-strata.txt"))
 sens_results_main_sicc %>%
   pivot_longer(cols = starts_with("prop"),
                names_to = "type_prop",
                values_to = "Proportion") %>%
-  mutate(type_prop = fct_recode(type_prop,
-                                "Proportion Always" = "prop_always",
-                                "Proportion Harmed" = "prop_harmed",
-                                "Proportion Never" = "prop_never",
-                                "Proportion Protected" = "prop_protected")) %>%
-  ggplot(aes(x = Proportion)) +
-  geom_histogram(fill = "gray", color = "black") +
-  facet_wrap("type_prop", nrow = 2, ncol = 2) +
-  scale_y_continuous(name = "Count") +
-  theme_bw()
-ggsave(filename = paste0(path_main, "survival-classification.png"),
-       device = "png",
-       width = double_width,
-       height = double_height,
-       units = "cm",
-       dpi = res)
+  group_by(type_prop) %>%
+  summarise(min_prop = min(Proportion), max_prop = max(Proportion)) %>%
+  print()
+sink()
+
+# Model-based Spearman's rho between S_0 and T_0, and between S_1 and T_1: 0.673
+# and 0.676, respectively.
+mean(sens_results_main_sicc$sp_rho_t0s0); mean(sens_results_main_sicc$sp_rho_s1t1)
+sp_rho_observable = 0.5 * (
+  mean(sens_results_main_sicc$sp_rho_t0s0) + mean(sens_results_main_sicc$sp_rho_s1t1)
+)
 
 sens_results_main_sicc %>%
   rename(
@@ -267,20 +281,36 @@ sens_results_main_sicc %>%
   ggpairs(
     columns = 4:7,
     diag = list(continuous = wrap("densityDiag", rescale = TRUE)),
-    upper = list(continuous = "blank")
+    upper = list(continuous = "blank"),
+    lower = list(
+      continuous = function(data, mapping, ...) {
+        fn = wrap("points")
+        p = fn(data, mapping, ...)
+        p + geom_vline(
+          xintercept = sp_rho_observable,
+          color = "red",
+          alpha = 0.50
+        ) +
+          geom_hline(yintercept = sp_rho_observable,
+                     color = "red",
+                     alpha = 0.50)
+      }
+    )
   ) +
   scale_x_continuous(
     name = TeX("$\\rho_s$"),
-    limits = c(0, 1)
+    limits = c(0, 1),
+    breaks = c(0, 0.5, 1)
   ) +
   xlab(TeX("$\\rho_{sp}(X, Y)$")) +
   ylab(TeX("$\\rho_{sp}(X, Y)$")) +
   scale_y_continuous(
     name = TeX("$\\rho_s$"),
-    limits = c(0, 1)
+    limits = c(0, 1),
+    breaks = c(0, 0.5, 1)
   ) +
   theme_bw()
-ggsave(filename = paste0(path_main, "ggpairs_sp_rho.png"),
+ggsave(filename = paste0(save_to_appendix, "ggpairs_sp_rho.png"),
        device = "png",
        width = double_width,
        height = double_height,

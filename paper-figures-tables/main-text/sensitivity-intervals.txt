@@ -1,0 +1,47 @@
+================================================================================
+
+ICA  = SICC in the subpopulation of patients where patients with S_0 = T_0 AND S_1 = T_1 are excluded.
+
+Sensitivity analysis based on the D-vine copula model
+
+Identifiable Copula Family (c12 and c34): gaussian gaussian
+Unidentifiable Copula Family (c23, c13_2, c24_3, and c14_23): gaussian gaussian gaussian gaussian
+Number of Internal Knots: 2
+
+Estimated interval of ignorance: (0.199, 0.48)
+Interval of uncertainty (pointwise): (0.175, 0.549)
+Interval of uncertainty (strong): (0.167, 0.555)
+alpha = 0.05
+
+================================================================================
+
+ICA  = Spearman's rho in the subpopulation of patients where patients with S_0 = T_0 AND S_1 = T_1 are excluded.
+
+Sensitivity analysis based on the D-vine copula model
+
+Identifiable Copula Family (c12 and c34): gaussian gaussian
+Unidentifiable Copula Family (c23, c13_2, c24_3, and c14_23): gaussian gaussian gaussian gaussian
+Number of Internal Knots: 2
+
+Estimated interval of ignorance: (0.368, 0.654)
+Interval of uncertainty (pointwise): (0.3, 0.7)
+Interval of uncertainty (strong): (0.285, 0.708)
+alpha = 0.05
+
+================================================================================
+
+ICA  = Spearman's rho in the full population.
+
+Sensitivity analysis based on the D-vine copula model
+
+Identifiable Copula Family (c12 and c34): gaussian gaussian
+Unidentifiable Copula Family (c23, c13_2, c24_3, and c14_23): gaussian gaussian gaussian gaussian
+Number of Internal Knots: 2
+
+Estimated interval of ignorance: (0.497, 0.707)
+Interval of uncertainty (pointwise): (0.446, 0.743)
+Interval of uncertainty (strong): (0.439, 0.751)
+alpha = 0.05
+
+================================================================================
+
