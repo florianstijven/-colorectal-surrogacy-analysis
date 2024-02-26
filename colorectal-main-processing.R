@@ -12,9 +12,26 @@ single_height = 8.2
 double_height = 12.8
 res = 600
 
-# Load results of the main and relaxed sensitivity analyses.
-sens_results_main = readRDS("results/sensitivity-analysis-results-main.rds")
+# The results of the main analysis are contained in two types of files: (i)
+# results of the MC sensitivity analysis and (ii) uncertainty intervals. We ran
+# two separate sensitivity analysis: one with the SICC as the ICA and one with
+# Spearman's rho as the ICA.
+sens_results_main_sicc = readRDS("results/sensitivity-analysis-results-main-sicc.rds")
+sens_results_main_sprho = readRDS("results/sensitivity-analysis-results-main-sprho.rds")
+# Sensitivity intervals where the ICA is defined in the population excluding
+# patients where S_0 = T_0 AND S_1 = T_1.
+sensitivity_intervals_sicc_subset = readRDS("results/sensitivity-intervals-Rh-subset.rds")
+sensitivity_intervals_sprho_subset = readRDS("results/sensitivity-intervals-sprho-subset.rds")
+# Sensitivity intervals where the ICA is defined in the full population. The
+# SICC is not defined in this population, so we only use Spearman's rho here.
+sensitivity_intervals_sprho_full = readRDS("results/sensitivity-intervals-sprho-full.rds")
+
+# The results of the analyses under relaxed assumptions are contained in a
+# single file. This file contains a tibble with one sensitivity analysis on each
+# row.
 sens_results_relaxed = readRDS("results/sensitivity-analysis-results-relaxed.rds")
+# For plotting, the original tibble with one sensitivity analysis per row should
+# be converted to a tibble with one MC replication per row.
 sens_results_relaxed_tbl = sens_results_relaxed %>%
   rowwise() %>%
   reframe(sens_results) %>%
@@ -31,7 +48,7 @@ path_other_copulas = "Figures/other-copulas/"
 
 # Histogram for ICA = R_h excluding patients that die before progressing under
 # both treatments; main analysis.
-sens_results_main %>%
+sens_results_main_sicc %>%
 ggplot(aes(x = ICA)) +
   coord_cartesian(xlim = c(0, 1)) +
   scale_x_continuous(name = TeX("$R_h^2$")) +
@@ -66,7 +83,8 @@ sens_results_relaxed_tbl %>%
     boundary = 1,
   ) +
   scale_y_continuous(name = "Density") +
-  facet_grid(range_class~copula_family) +
+  geom_histogram(data = tibble(ICA=c(-1, 2)), color = 'white') +
+  facet_grid(copula_family~range_class) +
   theme_bw()
 ggsave(filename = paste0(path_relaxed, "Rh-subset.png"),
        device = "png",
@@ -77,25 +95,25 @@ ggsave(filename = paste0(path_relaxed, "Rh-subset.png"),
 
 # Histogram for ICA = Spearman's rho excluding patients that die before
 # progressing under both treatments; main analysis.
-# sens_results_main %>%
-#   ggplot(aes(x = ICA)) +
-#   coord_cartesian(xlim = c(0, 1)) +
-#   scale_x_continuous(name = TeX("$R_h^2$")) +
-#   geom_histogram(
-#     mapping = aes(y = after_stat(density)),
-#     fill = "gray",
-#     color = "black",
-#     binwidth = 0.025,
-#     boundary = 1,
-#   ) +
-#   scale_y_continuous(name = "Density") +
-#   theme_bw()
-# ggsave(filename = paste0(path_main, "sprho-subset.png"),
-#        device = "png",
-#        width = single_width,
-#        height = single_height,
-#        units = "cm",
-#        dpi = res)
+sens_results_main_sprho %>%
+  ggplot(aes(x = ICA)) +
+  coord_cartesian(xlim = c(0, 1)) +
+  scale_x_continuous(name = TeX("$\\rho_{sp}$")) +
+  geom_histogram(
+    mapping = aes(y = after_stat(density)),
+    fill = "gray",
+    color = "black",
+    binwidth = 0.025,
+    boundary = 1,
+  ) +
+  scale_y_continuous(name = "Density") +
+  theme_bw()
+ggsave(filename = paste0(path_main, "sprho-subset.png"),
+       device = "png",
+       width = single_width,
+       height = single_height,
+       units = "cm",
+       dpi = res)
 
 # Histogram for ICA = Spearman's rho excluding patients that die before
 # progressing under both treatments; relaxed analyses.
@@ -112,7 +130,8 @@ sens_results_relaxed_tbl %>%
     boundary = 1,
   ) +
   scale_y_continuous(name = "Density") +
-  facet_grid(range_class~copula_family) +
+  geom_histogram(data = tibble(ICA=c(-1, 2)), color = 'white') +
+  facet_grid(copula_family~range_class) +
   theme_bw()
 ggsave(filename = paste0(path_relaxed, "sprho-subset.png"),
        device = "png",
@@ -122,7 +141,7 @@ ggsave(filename = paste0(path_relaxed, "sprho-subset.png"),
        dpi = res)
 
 # Histogram for ICA = Spearman's rho for the full population; main analysis.
-sens_results_main %>%
+sens_results_main_sicc %>%
   ggplot(aes(x = sp_rho)) +
   coord_cartesian(xlim = c(0, 1)) +
   scale_x_continuous(name = TeX("$\\rho_{sp}$")) +
@@ -158,7 +177,8 @@ sens_results_relaxed_tbl %>%
     boundary = 1,
   ) +
   scale_y_continuous(name = "Density") +
-  facet_grid(range_class~copula_family) +
+  geom_histogram(data = tibble(sp_rho=c(-1, 2)), color = 'white') +
+  facet_grid(copula_family~range_class) +
   theme_bw()
 ggsave(filename = paste0(path_relaxed, "sprho-full.png"),
        device = "png",
@@ -170,35 +190,53 @@ ggsave(filename = paste0(path_relaxed, "sprho-full.png"),
 
 # Uncertainty Intervals ---------------------------------------------------
 
-# Save sensitivity intervals to file for the main analysis.
+# To prevent having to run this file mutliple times, the sensitivity intervals
+# are printed to a .txt file.
+sink(file = paste0(path_main, "sensitivity-intervals.txt"))
+cat(paste(rep("=", 80), collapse = '')); cat("\n\n")
+cat("ICA  = SICC in the subpopulation of patients where patients with S_0 = T_0 AND S_1 = T_1 are excluded.\n\n")
+print(sensitivity_intervals_sicc_subset)
+cat("\n"); cat(paste(rep("=", 80), collapse = '')); cat("\n\n")
 
-# Save sensitivity intervals to file for relaxed analysis.
+cat("ICA  = Spearman's rho in the subpopulation of patients where patients with S_0 = T_0 AND S_1 = T_1 are excluded.\n\n")
+print(sensitivity_intervals_sprho_subset)
+cat("\n"); cat(paste(rep("=", 80), collapse = '')); cat("\n\n")
 
+cat("ICA  = Spearman's rho in the full population.\n\n")
+print(sensitivity_intervals_sprho_full)
+cat("\n"); cat(paste(rep("=", 80), collapse = '')); cat("\n\n")
+sink()
+
+# For the sensitive intervals under relaxed assumptions, we add the sensitivity
+# intervals directly to the original tibble.
+interval_paste = function(interval, digits = 3) {
+  paste0("(", round(interval[1], digits), ", ", round(interval[2], digits), ")")
+}
+sink(file = paste0(path_relaxed, "sensitivity-intervals.txt"))
+sens_results_relaxed %>%
+  ungroup() %>%
+  rowwise(c("range_class", "copula_family", "ICA_type")) %>%
+  summarise(
+    "Est. ignorance interval, ICA in subset" = interval_paste(sens_interval_ICA_subset$est_interval_of_ignorance),
+    "Uncertainty interval (pointwise), ICA in subset" = interval_paste(sens_interval_ICA_subset$interval_of_uncertainty_pointwise_coverage),
+    "Est. ignorance interval, ICA = sp_rho in full pop." = interval_paste(sens_interval_sprho_full$est_interval_of_ignorance),
+    "Uncertainty interval (pointwise), ICA = sp_rho in full pop." = interval_paste(sens_interval_sprho_full$interval_of_uncertainty_pointwise_coverage),
+  ) %>%
+  ungroup()
+sink()
 
 # Dependent Censoring -----------------------------------------------------
 
 # Proportions of dependent censoring of TTP by OS in both treatment groups.
-mean(sens_results$prop_never + sens_results$prop_harmed)
-mean(sens_results$prop_never + sens_results$prop_protected)
-
-# Principal Strata of Diseases Status -------------------------------------
-
-
-
-
-
-
-
-
-
-
+mean(sens_results_main_sicc$prop_never + sens_results_main_sicc$prop_harmed)
+mean(sens_results_main_sicc$prop_never + sens_results_main_sicc$prop_protected)
 
 # Additional Results ------------------------------------------------------
 
 # Additional exploration of how the assumptions translate to some easy to
 # interpret quantities. We first look at survival classification probabilities
 # in all simulated scenarios.
-sens_results %>%
+sens_results_main_sicc %>%
   pivot_longer(cols = starts_with("prop"),
                names_to = "type_prop",
                values_to = "Proportion") %>%
@@ -212,53 +250,49 @@ sens_results %>%
   facet_wrap("type_prop", nrow = 2, ncol = 2) +
   scale_y_continuous(name = "Count") +
   theme_bw()
-ggsave(filename = paste0(path, "survival_classification.png"),
+ggsave(filename = paste0(path_main, "survival-classification.png"),
        device = "png",
        width = double_width,
        height = double_height,
        units = "cm",
        dpi = res)
 
-sens_results %>%
-  pivot_longer(cols = 4:7,
-               names_to = "type_corr",
-               values_to = "value") %>%
-  mutate(type_corr = fct_recode(type_corr,
-                                "S_0 and S_1" = "sp_rho_s0s1",
-                                "S_0 and T_1" = "sp_rho_s0t1",
-                                "S_1 and T_0" = "sp_rho_t0s1",
-                                "T_0 and T_1" = "sp_rho_t0t1")) %>%
-  ggplot(aes(x = value)) +
-  geom_histogram(fill = "gray", color = "black") +
-  facet_wrap("type_corr", nrow = 2, ncol = 2) +
-  scale_y_continuous(name = "Count") +
-  scale_x_continuous(name = TeX("$\\rho_s$"), limits = c(0, 1)) +
+sens_results_main_sicc %>%
+  rename(
+    "S_0 and S_1" = "sp_rho_s0s1",
+    "S_0 and T_1" = "sp_rho_s0t1",
+    "S_1 and T_0" = "sp_rho_t0s1",
+    "T_0 and T_1" = "sp_rho_t0t1"
+  ) %>%
+  ggpairs(
+    columns = 4:7,
+    diag = list(continuous = wrap("densityDiag", rescale = TRUE)),
+    upper = list(continuous = "blank")
+  ) +
+  scale_x_continuous(
+    name = TeX("$\\rho_s$"),
+    limits = c(0, 1)
+  ) +
+  xlab(TeX("$\\rho_{sp}(X, Y)$")) +
+  ylab(TeX("$\\rho_{sp}(X, Y)$")) +
+  scale_y_continuous(
+    name = TeX("$\\rho_s$"),
+    limits = c(0, 1)
+  ) +
   theme_bw()
-ggsave(filename = paste0(path, "pairwise_sp_rho.png"),
+ggsave(filename = paste0(path_main, "ggpairs_sp_rho.png"),
        device = "png",
        width = double_width,
        height = double_height,
        units = "cm",
        dpi = res)
 
-sens_results %>%
-  rename("S_0 and S_1" = "sp_rho_s0s1",
-         "S_0 and T_1" = "sp_rho_s0t1",
-         "S_1 and T_0" = "sp_rho_t0s1",
-         "T_0 and T_1" = "sp_rho_t0t1") %>%
-  ggpairs(columns = 4:7) +
-  scale_x_continuous(name = TeX("$\\rho_s$")) +
-  scale_y_continuous(name = TeX("$\\rho_s$")) +
-  theme_bw()
-ggsave(filename = paste0(path, "ggpairs_sp_rho.png"),
-       device = "png",
-       width = double_width,
-       height = double_height,
-       units = "cm",
-       dpi = res)
-
-# Compute the range of the OR's for the principal strate of diseased status.
-sens_results %>%
+# Compute the range of the OR's for the principal strata of diseased status.
+sink(file = paste0(path_relaxed, "OR-diseased-status.txt"))
+sens_results_relaxed_tbl %>%
   mutate(OR = (prop_always * prop_never) / (prop_harmed * prop_protected)) %>%
-  summarise(min_OR = min(OR), max_OR = max(OR))
+  group_by(range_class, copula_family, ICA_type) %>%
+  summarize("Mininimum OR" = min(OR), "Maximum OR" = max(OR)) %>%
+  ungroup()
+sink()
 

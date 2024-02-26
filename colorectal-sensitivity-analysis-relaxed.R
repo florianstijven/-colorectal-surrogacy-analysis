@@ -4,9 +4,6 @@ print(args)
 
 # Setup -------------------------------------------------------------------
 
-# Sandboxing takes a significant amount of time on the HPC and is therefore
-# disabled.
-options(renv.config.sandbox.enabled = FALSE)
 ncores = as.integer(args[1])
 # Number of MC replications in the sensitivity analysis
 n_sim = 5e3
