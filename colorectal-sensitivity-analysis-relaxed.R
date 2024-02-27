@@ -25,11 +25,11 @@ best_fitted_model = readRDS("results/best-fitted-model.rds")
 # scenarios_tbl.
 sensitivity_ranges = tibble(
   ranges = list(list(
-    lower = c(0.5, 0, 0, 0.15),
+    lower = c(0.5, 0, 0, 0.2),
     upper = c(0.95, 0, 0, 0.8)
   ), list(
-    lower = c(0.35, 0, 0, 0.05),
-    upper = c(0.975, 0.3, 0.3, 0.90)
+    lower = c(0.40, 0, 0, 0.15),
+    upper = c(0.975, 0.20, 0.20, 0.90)
   )),
   range_class = c("Main Assumptions", "Relaxed Assumptions"),
   cond_ind = c(TRUE, FALSE)

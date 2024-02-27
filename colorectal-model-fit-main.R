@@ -6,9 +6,12 @@ library(tidyverse)
 # Size parameter for saving plots to disk.
 single_width = 9 / 2.54
 double_width = 14 / 2.54
+between_width = single_width * 1.25
 single_height = 8.2 / 2.54
 double_height = 12.8 / 2.54
+between_height = single_height * 1.25
 res = 600
+
 save_to_main = "paper-figures-tables/main-text/"
 save_to_appendix = "paper-figures-tables/appendix/"
 
@@ -112,7 +115,8 @@ grid = seq(from = 1, to = 250, length.out = 400)
 plot(best_fitted_model, grid = grid)
 # The plot() method automatically runs all GoF plots. In order to save them
 # one-by-one. We call the functions that produce only single plots one-by-one.
-pdf(file = paste0(save_to_main, "marginal-gof-s0.pdf"), width = double_width, height = double_height)
+
+pdf(file = paste0(save_to_main, "marginal-gof-s0.pdf"), width = between_width, height = between_height)
 marginal_gof_scr_S_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -123,7 +127,7 @@ marginal_gof_scr_S_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to_appendix, "marginal-gof-s1.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_appendix, "marginal-gof-s1.pdf"), width = between_width, height = between_height)
 marginal_gof_scr_S_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -134,7 +138,7 @@ marginal_gof_scr_S_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to_main, "marginal-gof-t0.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_main, "marginal-gof-t0.pdf"), width = between_width, height = between_height)
 marginal_gof_scr_T_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -145,7 +149,7 @@ marginal_gof_scr_T_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to_appendix, "marginal-gof-t1.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_appendix, "marginal-gof-t1.pdf"), width = between_width, height = between_height)
 marginal_gof_scr_T_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -157,7 +161,7 @@ marginal_gof_scr_T_plot(
 )
 dev.off()
 
-pdf(file = paste0(save_to_main, "mean-S-before-T-gof0.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_main, "mean-S-before-T-gof0.pdf"), width = between_width, height = between_height)
 mean_S_before_T_plot_scr(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -169,7 +173,7 @@ mean_S_before_T_plot_scr(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to_appendix, "mean-S-before-T-gof1.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_appendix, "mean-S-before-T-gof1.pdf"), width = between_width, height = between_height)
 mean_S_before_T_plot_scr(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -181,7 +185,7 @@ mean_S_before_T_plot_scr(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to_main, "prob-dying-gof0.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_main, "prob-dying-gof0.pdf"), width = between_width, height = between_height)
 prob_dying_without_progression_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -193,7 +197,7 @@ prob_dying_without_progression_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to_appendix, "prob-dying-gof1.pdf"), width = double_width, height = double_height)
+pdf(file = paste0(save_to_appendix, "prob-dying-gof1.pdf"), width = between_width, height = between_height)
 prob_dying_without_progression_plot(
   fitted_model = best_fitted_model,
   grid = grid,

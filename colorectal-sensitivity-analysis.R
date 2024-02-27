@@ -33,7 +33,7 @@ sens_results_sicc = sensitivity_analysis_SurvSurv_copula(
   composite = TRUE,
   degrees = 0,
   copula_family2 = "gaussian",
-  lower = c(0.5, 0, 0, 0.15),
+  lower = c(0.5, 0, 0, 0.20),
   upper = c(0.95, 0, 0, 0.8)
 )
 set.seed(1)
