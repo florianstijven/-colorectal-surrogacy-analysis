@@ -8,9 +8,9 @@ Identifiable Copula Family (c12 and c34): gaussian gaussian
 Unidentifiable Copula Family (c23, c13_2, c24_3, and c14_23): gaussian gaussian gaussian gaussian
 Number of Internal Knots: 2
 
-Estimated interval of ignorance: (0.199, 0.48)
+Estimated interval of ignorance: (0.201, 0.48)
 Interval of uncertainty (pointwise): (0.175, 0.549)
-Interval of uncertainty (strong): (0.167, 0.555)
+Interval of uncertainty (strong): (0.166, 0.555)
 alpha = 0.05
 
 ================================================================================
@@ -40,7 +40,7 @@ Number of Internal Knots: 2
 
 Estimated interval of ignorance: (0.497, 0.707)
 Interval of uncertainty (pointwise): (0.446, 0.743)
-Interval of uncertainty (strong): (0.439, 0.751)
+Interval of uncertainty (strong): (0.438, 0.751)
 alpha = 0.05
 
 ================================================================================

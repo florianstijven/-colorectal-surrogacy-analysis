@@ -1,19 +1,19 @@
 # A tibble: 16 × 5
    range_class         copula_family ICA_type        `Mininimum OR` `Maximum OR`
    <chr>               <chr>         <chr>                    <dbl>        <dbl>
- 1 Main Assumptions    clayton       SICC                     2.03          33.5
- 2 Main Assumptions    clayton       Spearman's cor…          2.03          33.5
- 3 Main Assumptions    frank         SICC                     1.94          19.4
- 4 Main Assumptions    frank         Spearman's cor…          1.94          19.4
- 5 Main Assumptions    gaussian      SICC                     2.02          21.9
- 6 Main Assumptions    gaussian      Spearman's cor…          2.02          21.9
- 7 Main Assumptions    gumbel        SICC                     2.07          19.2
- 8 Main Assumptions    gumbel        Spearman's cor…          2.07          19.2
- 9 Relaxed Assumptions clayton       SICC                     0.227         25.5
-10 Relaxed Assumptions clayton       Spearman's cor…          0.227         25.5
-11 Relaxed Assumptions frank         SICC                     0.766         16.0
-12 Relaxed Assumptions frank         Spearman's cor…          0.766         16.0
-13 Relaxed Assumptions gaussian      SICC                     0.754         18.2
-14 Relaxed Assumptions gaussian      Spearman's cor…          0.754         18.2
-15 Relaxed Assumptions gumbel        SICC                     0.797         16.0
-16 Relaxed Assumptions gumbel        Spearman's cor…          0.797         16.0
+ 1 Main Assumptions    clayton       SICC                      2.34         33.5
+ 2 Main Assumptions    clayton       Spearman's cor…           2.34         33.5
+ 3 Main Assumptions    frank         SICC                      2.18         19.4
+ 4 Main Assumptions    frank         Spearman's cor…           2.18         19.4
+ 5 Main Assumptions    gaussian      SICC                      2.27         21.9
+ 6 Main Assumptions    gaussian      Spearman's cor…           2.27         21.9
+ 7 Main Assumptions    gumbel        SICC                      2.26         19.2
+ 8 Main Assumptions    gumbel        Spearman's cor…           2.26         19.2
+ 9 Relaxed Assumptions clayton       SICC                      1.25         56.0
+10 Relaxed Assumptions clayton       Spearman's cor…           1.25         56.0
+11 Relaxed Assumptions frank         SICC                      1.24         32.8
+12 Relaxed Assumptions frank         Spearman's cor…           1.24         32.8
+13 Relaxed Assumptions gaussian      SICC                      1.27         39.3
+14 Relaxed Assumptions gaussian      Spearman's cor…           1.27         39.3
+15 Relaxed Assumptions gumbel        SICC                      1.35         36.7
+16 Relaxed Assumptions gumbel        Spearman's cor…           1.35         36.7

@@ -1,2 +1,2 @@
-Estimated proportion dependent censoring for Z = 0: P(S_0 = T_0) = 0.3326857
+Estimated proportion dependent censoring for Z = 0: P(S_0 = T_0) = 0.3328048
 Estimated proportion dependent censoring for Z = 1: P(S_1 = T_1) = 0.3036

@@ -1,7 +1,7 @@
 # A tibble: 4 × 3
   type_prop      min_prop max_prop
   <chr>             <dbl>    <dbl>
-1 prop_always      0.498     0.603
-2 prop_harmed      0.0938    0.198
-3 prop_never       0.135     0.235
-4 prop_protected   0.0689    0.168
+1 prop_always      0.504     0.603
+2 prop_harmed      0.0938    0.193
+3 prop_never       0.141     0.235
+4 prop_protected   0.0688    0.162
