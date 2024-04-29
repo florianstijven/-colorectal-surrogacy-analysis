@@ -3,11 +3,12 @@
 # Load the required packages
 library(Surrogate)
 library(tidyverse)
+library(survminer)
 # Size parameter for saving plots to disk.
-single_width = 9 / 2.54
+single_width = 61
 double_width = 14 / 2.54
 between_width = single_width * 1.25
-single_height = 8.2 / 2.54
+single_height = 55
 double_height = 12.8 / 2.54
 between_height = single_height * 1.25
 res = 600
@@ -114,9 +115,206 @@ sink() # Close connection to .txt file.
 grid = seq(from = 1, to = 250, length.out = 400)
 plot(best_fitted_model, grid = grid)
 # The plot() method automatically runs all GoF plots. In order to save them
-# one-by-one. We call the functions that produce only single plots one-by-one.
+# one-by-one, we call the functions that produce only single plots one-by-one.
+# However, the plots for the main text are produced manually using ggplot.
 
-pdf(file = paste0(save_to_main, "marginal-gof-s0.pdf"), width = between_width, height = between_height)
+## Plots for Main text ----------------------------------------------------
+fitted_submodel = best_fitted_model$fit_0
+knots = best_fitted_model$knots0
+knott = best_fitted_model$knott0
+
+para = fitted_submodel$estimate
+surv_joint = function(x) {
+  exp(
+    Surrogate:::survival_survival_loglik(
+      para = para,
+      X = x,
+      delta_X = 0,
+      Y = x,
+      delta_Y = 0,
+      copula_family = best_fitted_model$copula_family[1],
+      knotsx = knots,
+      knotsy = knott
+    )
+  )
+}
+Surv_probs = sapply(X = grid, FUN = surv_joint)
+ggsurvplot(
+  survival::survfit(
+    survival::Surv(
+      Pfs,
+      Ind
+    ) ~
+      1,
+    data = best_fitted_model$data %>%
+      mutate(Ind = pmax(PfsInd, SurvInd)),
+    subset = best_fitted_model$data$Treat ==
+      0
+  ),
+  ylab = "P(S > t)",
+  xlab = "t (months)",
+  xlim = c(0, 250),
+  color = "black",
+  censor = FALSE
+) %>% `[[`(1) +
+  geom_line(aes(x = grid, y = Surv_probs),
+            data = data.frame(grid = grid, Surv_probs), color = "red", linetype = "dashed") +
+  scale_x_continuous(breaks = c(0, 50, 100, 150, 200, 250)) +
+  theme_bw() +
+  theme(legend.position = "none")
+ggsave(
+  filename = paste0(save_to_main, "marginal-gof-s0.pdf"),
+  width = single_width,
+  height = single_height,
+  units = "mm",
+  device = "pdf"
+)
+
+ks = length(knots)
+kt = length(knott)
+para_t = para[(1 + ks):(ks + kt)]
+surv_t = function(x) {
+  flexsurv::psurvspline(q = x, gamma = para_t, knots = knott)
+}
+Surv_probs = 1 - surv_t(grid)
+ggsurvplot(
+  survival::survfit(
+    survival::Surv(
+      Surv,
+      SurvInd
+    ) ~
+      1,
+    data = best_fitted_model$data,
+    subset = best_fitted_model$data$Treat ==
+      0
+  ),
+  ylab = "P(T > t)",
+  xlab = "t (months)",
+  xlim = c(0, 250),
+  color = "black",
+  censor = FALSE
+) %>% `[[`(1) +
+  geom_line(aes(x = grid, y = Surv_probs),
+            data = data.frame(grid = grid, Surv_probs), color = "red", linetype = "dashed") +
+  scale_x_continuous(breaks = c(0, 50, 100, 150, 200, 250)) +
+  theme_bw() +
+  theme(legend.position = "none")
+ggsave(
+  filename = paste0(save_to_main, "marginal-gof-t0.pdf"),
+  width = single_width,
+  height = single_height,
+  units = "mm",
+  device = "pdf"
+)
+
+
+selected_data = best_fitted_model$data[best_fitted_model$data$PfsInd ==
+                                         1 &
+                                         best_fitted_model$data$SurvInd == 1,]
+model_cond_means = sapply(
+  X = grid,
+  FUN = Surrogate:::mean_S_before_T,
+  fitted_model = best_fitted_model,
+  treated = 0
+)
+fit_gam = mgcv::gam(
+  y ~ s(x),
+  family = stats::quasi(link = "log",
+                        variance = "mu"),
+  data = data.frame(x = selected_data$Surv[selected_data$Treat ==
+                                             0], y = selected_data$Pfs[selected_data$Treat ==
+                                                                               0])
+)
+predictions = mgcv::predict.gam(fit_gam,
+                                newdata = data.frame(x = grid),
+                                type = "link",
+                                se.fit = TRUE)
+data.frame(
+  grid,
+  pred = exp(predictions$fit),
+  upper_ci = exp(predictions$fit + 1.96 *
+                   predictions$se.fit),
+  lower_ci = exp(predictions$fit - 1.96 *
+                   predictions$se.fit),
+  model_cond_means
+) %>%
+  ggplot() +
+  geom_line(aes(x = grid, y = pred)) +
+  geom_ribbon(aes(x = grid, ymin = lower_ci, ymax = upper_ci), alpha = 0.3) +
+  geom_point(aes(x = x, y = y),
+             data = data.frame(x = selected_data$Surv[selected_data$Treat ==
+                                                        0], y = selected_data$Pfs[selected_data$Treat ==
+                                                                                    0]),
+             alpha = 0.1) +
+  geom_line(aes(x = grid, y = model_cond_means),
+            color = "red",
+            linetype = "dashed") +
+  coord_cartesian(ylim = c(0, max(selected_data$Surv))) +
+  xlab("t (months)") +
+  ylab("E(S | T = t, S < T)") +
+  theme_bw()
+ggsave(
+  filename = paste0(save_to_main, "mean-S-before-T-gof0.pdf"),
+  width = single_width,
+  height = single_height,
+  units = "mm",
+  device = "pdf"
+)
+
+selected_data = best_fitted_model$data[best_fitted_model$data$SurvInd ==
+                                    1,]
+model_prob = 1 - sapply(X = grid, FUN = Surrogate:::prob_progression_before_dying,
+                        fitted_model = best_fitted_model, treated = 0)
+fit_gam = mgcv::gam(
+  y ~ s(x),
+  family = stats::binomial(),
+  data = data.frame(x = selected_data$Surv[selected_data$Treat ==
+                                             0],
+                    y = 1 - selected_data$PfsInd[selected_data$Treat ==
+                                                   0])
+)
+expit = function(x)
+  1 / (1 + exp(-x))
+predictions = mgcv::predict.gam(fit_gam,
+                                newdata = data.frame(x = grid),
+                                type = "link",
+                                se.fit = TRUE)
+data.frame(
+  grid,
+  pred = expit(predictions$fit),
+  upper_ci = expit(predictions$fit + 1.96 *
+                   predictions$se.fit),
+  lower_ci = expit(predictions$fit - 1.96 *
+                   predictions$se.fit),
+  model_prob
+) %>%
+  ggplot() +
+  geom_line(aes(x = grid, y = pred)) +
+  geom_ribbon(aes(x = grid, ymin = lower_ci, ymax = upper_ci), alpha = 0.3) +
+  geom_point(aes(x = x, y = y),
+             data = data.frame(x = selected_data$Surv[selected_data$Treat ==
+                                                        0],
+                               y = 1 - selected_data$PfsInd[selected_data$Treat ==
+                                                              0]),
+             alpha = 0.1) +
+  geom_line(aes(x = grid, y = model_prob),
+            color = "red",
+            linetype = "dashed") +
+  xlab("t (months)") +
+  ylab("P(S = T | T = t)") +
+  theme_bw()
+ggsave(
+  filename = paste0(save_to_main, "prob-dying-gof0.pdf"),
+  width = single_width,
+  height = single_height,
+  units = "mm",
+  device = "pdf"
+)
+
+
+## Plots for Appendix -----------------------------------------------------
+
+pdf(file = paste0(save_to_appendix, "marginal-gof-s0.pdf"), width = between_width, height = between_height)
 marginal_gof_scr_S_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -138,7 +336,7 @@ marginal_gof_scr_S_plot(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to_main, "marginal-gof-t0.pdf"), width = between_width, height = between_height)
+pdf(file = paste0(save_to_appendix, "marginal-gof-t0.pdf"), width = between_width, height = between_height)
 marginal_gof_scr_T_plot(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -161,7 +359,7 @@ marginal_gof_scr_T_plot(
 )
 dev.off()
 
-pdf(file = paste0(save_to_main, "mean-S-before-T-gof0.pdf"), width = between_width, height = between_height)
+pdf(file = paste0(save_to_appendix, "mean-S-before-T-gof0.pdf"), width = between_width, height = between_height)
 mean_S_before_T_plot_scr(
   fitted_model = best_fitted_model,
   grid = grid,
@@ -185,7 +383,7 @@ mean_S_before_T_plot_scr(
   xlim = c(0, 250)
 )
 dev.off()
-pdf(file = paste0(save_to_main, "prob-dying-gof0.pdf"), width = between_width, height = between_height)
+pdf(file = paste0(save_to_appendix, "prob-dying-gof0.pdf"), width = between_width, height = between_height)
 prob_dying_without_progression_plot(
   fitted_model = best_fitted_model,
   grid = grid,
