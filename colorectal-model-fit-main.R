@@ -4,6 +4,7 @@
 library(Surrogate)
 library(tidyverse)
 library(survminer)
+library(survival)
 # Size parameter for saving plots to disk.
 single_width = 61
 double_width = 14 / 2.54
@@ -21,6 +22,27 @@ save_to_appendix = "paper-figures-tables/appendix/"
 data = read.csv("COLO_DAT.csv")
 data = data %>%
   select(PFSTIME, SURVTIME, TREAT, PFS_IND, SURV_IND)
+
+sink(file = paste0(save_to_main, "data-descriptive-statistics.txt"))
+# Compute the number (and proportion) of censoring for overall survival.
+data %>%
+  summarize(
+    "Total number of observations" = n(),
+    "Number of censored obervations for OS" = sum(SURV_IND == 0),
+    "Number of OS events" = sum(SURV_IND),
+    "Number of censored observations for PFS" = sum(PFS_IND == 0),
+    "Number of PFS events" = sum(PFS_IND),
+    "Proportion of censored observations for OS" = mean(SURV_IND == 0)
+  )
+cat("\n")
+# Estimate the median PFS and OS durations.
+cat("Median PFS time in weeks (95% CI)\n")
+surv_median(survfit(Surv(PFSTIME, PFS_IND) ~ 1, data))
+cat("\nMedian OS time in weeks (95% CI)\n")
+surv_median(survfit(Surv(SURVTIME, SURV_IND) ~ 1, data))
+sink()
+
+
 # In the original data, the surrogate variable is the composite progression-free
 # survival (PFS). As explained in the paper, we will model time-to progression
 # (TTP) instead, where TTP is dependently censored by overall survival (OS).

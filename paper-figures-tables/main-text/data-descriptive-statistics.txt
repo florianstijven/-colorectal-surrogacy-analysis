@@ -1,0 +1,14 @@
+  Total number of observations Number of censored obervations for OS Number of OS events
+1                          736                                   186                 550
+  Number of censored observations for PFS Number of PFS events
+1                                      42                  694
+  Proportion of censored observations for OS
+1                                  0.2527174
+
+Median PFS time in weeks (95% CI)
+  strata   median    lower    upper
+1    All 25.42857 24.14286 27.85714
+
+Median OS time in weeks (95% CI)
+  strata   median    lower    upper
+1    All 52.28571 49.28571 57.14286
