@@ -174,7 +174,7 @@ ggsurvplot(
       0
   ),
   ylab = "P(S > t)",
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   xlim = c(0, 250),
   color = "black",
   censor = FALSE
@@ -211,7 +211,7 @@ ggsurvplot(
       0
   ),
   ylab = "P(T > t)",
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   xlim = c(0, 250),
   color = "black",
   censor = FALSE
@@ -272,7 +272,7 @@ data.frame(
             color = "red",
             linetype = "dashed") +
   coord_cartesian(ylim = c(0, max(selected_data$Surv))) +
-  xlab("t (months)") +
+  xlab("t (weeks)") +
   ylab("E(S | T = t, S < T)") +
   theme_bw()
 ggsave(
@@ -322,7 +322,7 @@ data.frame(
   geom_line(aes(x = grid, y = model_prob),
             color = "red",
             linetype = "dashed") +
-  xlab("t (months)") +
+  xlab("t (weeks)") +
   ylab("P(S = T | T = t)") +
   theme_bw()
 ggsave(
@@ -342,7 +342,7 @@ marginal_gof_scr_S_plot(
   grid = grid,
   treated = 0,
   main = "Survival Function S - Control Treatment",
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   ylab = "P(S > t)",
   xlim = c(0, 250)
 )
@@ -353,7 +353,7 @@ marginal_gof_scr_S_plot(
   grid = grid,
   treated = 1,
   main = "Survival Function S - Active Treatment",
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   ylab = "P(S > t)",
   xlim = c(0, 250)
 )
@@ -364,7 +364,7 @@ marginal_gof_scr_T_plot(
   grid = grid,
   treated = 0,
   main = "Survival Function T - Control Treatment",
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   ylab = "P(T > t)",
   xlim = c(0, 250)
 )
@@ -375,7 +375,7 @@ marginal_gof_scr_T_plot(
   grid = grid,
   treated = 1,
   main = "Survival Function T - Active Treatment",
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   ylab = "P(T > t)",
   xlim = c(0, 250)
 )
@@ -386,7 +386,7 @@ mean_S_before_T_plot_scr(
   fitted_model = best_fitted_model,
   grid = grid,
   treated = 0,
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   ylab = "E(S | T = t, S < T)",
   col = "gray",
   main = "Control Treatment",
@@ -398,7 +398,7 @@ mean_S_before_T_plot_scr(
   fitted_model = best_fitted_model,
   grid = grid,
   treated = 1,
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   ylab = "E(S | T = t, S < T)",
   col = "gray",
   main = "Active Treatment",
@@ -410,7 +410,7 @@ prob_dying_without_progression_plot(
   fitted_model = best_fitted_model,
   grid = grid,
   treated = 0,
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   ylab = "P(S = T | T = t)",
   col = "gray",
   main = "Control Treatment",
@@ -422,7 +422,7 @@ prob_dying_without_progression_plot(
   fitted_model = best_fitted_model,
   grid = grid,
   treated = 1,
-  xlab = "t (months)",
+  xlab = "t (weeks)",
   ylab = "P(S = T | T = t)",
   col = "gray",
   main = "Active Treatment",
