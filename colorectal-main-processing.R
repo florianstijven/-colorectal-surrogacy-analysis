@@ -53,7 +53,7 @@ path_relaxed = "additional-figures-tables/relaxed-analysis/"
 sens_results_main_sicc %>%
 ggplot(aes(x = ICA)) +
   coord_cartesian(xlim = c(0, 1)) +
-  scale_x_continuous(name = TeX("$R_h^2$")) +
+  scale_x_continuous(name = expression({R[h]^2}(hat(bold(beta))[N], bold(nu^{(l)})))) +
   geom_histogram(
     mapping = aes(y = after_stat(density)),
     fill = "gray",
@@ -63,8 +63,8 @@ ggplot(aes(x = ICA)) +
   ) +
   scale_y_continuous(name = "Density") +
   theme_bw()
-ggsave(filename = paste0(save_to_main, "Rh-subset.png"),
-       device = "png",
+ggsave(filename = paste0(save_to_main, "Rh-subset.pdf"),
+       device = "pdf",
        width = single_width,
        height = single_height,
        units = "cm",
