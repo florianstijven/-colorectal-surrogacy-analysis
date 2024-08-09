@@ -23,9 +23,9 @@ follow this suggestion.
 ## Main Analysis
 
 To reproduce the results reported in Stijven et al. (2024), first run
-`colorectal-model-fit-main.R`. The code in this file fits a set of vine
-copula models and selects the best fitting model based on the Akaike
-information criterion. The fitted models are saved into
+`colorectal-model-fit-main.R`. The code in this file fits a set of
+D-vine copula models and selects the best fitting model based on the
+Akaike information criterion. The fitted models are saved into
 `results\fitted-models.rds`. The best fitted model is saved into
 `results\best-fitted-model.rds` and is summarized in
 `results\best-fitted-model-summary.txt`.
@@ -52,6 +52,15 @@ The sensitivity analysis under relaxed assumptions is implemented in
 `colorectal-sensitivity-analysis-relaxed.R` and the results are saved to
 `results\sensitivity-analysis-results-relaxed.rds`.
 
+## Goodness-of-Fit Plots
+
+The goodness-of-fit plots presented in the paper are produced with
+`goodness-of-fit-plots.R`. These plots are saved to
+`paper-figures-tables\` for the selected model (Gaussian copula model
+with two internal knots) and to
+`paper-figures-tables\main-text\goodness-of-fit\` for the best-fitting
+Frank, Gumbel, and Clayton copula models.
+
 ## Results
 
 All tables and figures presented in Stijven et al. (2024) are saved into
@@ -71,7 +80,7 @@ and treatment with 5FU alone were compared (Greco and others, 1996).
 
 # Additional Files
 
-Files that were not mentioned above are related to the `renv` package,
+Files that are not mentioned above are related to the `renv` package,
 licensing, RStudio project files, or files related to HPC
 infrastructure. Specifically, `.slurm` files contain scripts for running
 certain R scripts on HPC infrastructure.
